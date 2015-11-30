@@ -1,0 +1,42 @@
+services:
+    positibe_orm_routing_auto.auto_routing_listener:
+        class: Positibe\Bundle\OrmRoutingBundle\EventListener\AutoRoutingListener
+        arguments: [@service_container]
+        tags:
+            - { name: doctrine.event_subscriber, priority: 10}
+
+    positibe_orm_routing_auto.slugifier:
+        class: Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier
+        arguments: [Gedmo\Sluggable\Util\Urlizer::urlize]
+
+    positibe_orm_routing_auto.auto_route_manager:
+        class: Positibe\Bundle\OrmRoutingBundle\AutoRouting\AutoRouteManager
+        arguments: [@positibe_orm_routing_auto.metadata.factory,@positibe_orm_routing_auto.service_registry,@positibe_orm_routing_auto.adapter, @positibe_orm_routing_auto.increment_conflict_resolver, %locale% ]
+
+    positibe_orm_routing_auto.adapter:
+        class: Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter\OrmAdapter
+        arguments: [@doctrine.orm.entity_manager, @router, @positibe_orm_routing.route_builder]
+
+    positibe_orm_routing_auto.service_registry:
+        class: Symfony\Cmf\Component\RoutingAuto\ServiceRegistry
+        calls:
+            - [ registerTokenProvider, [ content_method, @positibe_orm_routing_auto.content_method_provider ]]
+
+    positibe_orm_routing_auto.metadata.parameters.loader:
+        class: Positibe\Bundle\OrmRoutingBundle\AutoRouting\Mapping\ParametersLoader
+
+    positibe_orm_routing_auto.metadata.factory.builder:
+        class: Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder
+        arguments: [@positibe_orm_routing_auto.metadata.parameters.loader]
+
+    positibe_orm_routing_auto.metadata.factory:
+        class: Positibe\Bundle\OrmRoutingBundle\AutoRouting\MetadataFactory
+        factory: [@positibe_orm_routing_auto.metadata.factory.builder, getMetadataFactory]
+
+    positibe_orm_routing_auto.content_method_provider:
+        class: Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentMethodProvider
+        arguments: [@positibe_orm_routing_auto.slugifier]
+
+    positibe_orm_routing_auto.increment_conflict_resolver:
+        class: Symfony\Cmf\Component\RoutingAuto\ConflictResolver\AutoIncrementConflictResolver
+        arguments: [@positibe_orm_routing_auto.adapter]
