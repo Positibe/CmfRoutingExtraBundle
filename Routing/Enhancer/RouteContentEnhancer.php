@@ -28,16 +28,16 @@ class RouteContentEnhancer implements RouteEnhancerInterface
      */
     protected $em;
 
-    protected $routefield;
+    protected $routeField;
 
     /**
      * @param EntityManager $entityManager
-     * @param string $routefield
+     * @param string $routeField
      */
-    public function __construct(EntityManager $entityManager, $routefield = '_route_object')
+    public function __construct(EntityManager $entityManager, $routeField = '_route_object')
     {
-        $this->manager = $entityManager;
-        $this->routefield = $routefield;
+        $this->em = $entityManager;
+        $this->routeField = $routeField;
     }
 
     /**
@@ -51,9 +51,9 @@ class RouteContentEnhancer implements RouteEnhancerInterface
      */
     public function enhance(array $defaults, Request $request)
     {
-        $route = $defaults[$this->routefield];
+        $route = $defaults[$this->routeField];
 
-        ContentLoader::loadContent($route, $this->manager);
+        ContentLoader::loadContent($route, $this->em);
 
         return $defaults;
     }

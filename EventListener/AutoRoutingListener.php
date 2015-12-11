@@ -82,6 +82,7 @@ class AutoRoutingListener implements EventSubscriber
                 foreach ($entity->getRoutes()->toArray() as $route) {
                     $routeBuilder->setCustomController($route, $entity);
                     $em->persist($route);
+                    $uow->computeChangeSets();
                 }
             }
         }
