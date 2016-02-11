@@ -12,6 +12,7 @@ namespace Positibe\Bundle\OrmRoutingBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Positibe\Bundle\OrmMenuBundle\Menu\Factory\ContentAwareFactory;
 use Positibe\Bundle\OrmRoutingBundle\Model\CustomRouteInformation;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
@@ -48,7 +49,6 @@ class AutoRoutingListener implements EventSubscriber
         );
     }
 
-
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
         $em = $eventArgs->getEntityManager();
@@ -74,16 +74,14 @@ class AutoRoutingListener implements EventSubscriber
                     }
                 }
             }
-            if ($entity instanceof RouteReferrersInterface &&
-                $entity instanceof CustomRouteInformation &&
-                !empty($entity->getCustomController())
-            ) {
+            if ($this->hasCustomRouteInformation($entity)) {
                 $routeBuilder = $this->container->get('positibe_orm_routing.route_builder');
                 foreach ($entity->getRoutes()->toArray() as $route) {
                     $routeBuilder->setCustomController($route, $entity);
                     $em->persist($route);
-                    $uow->computeChangeSets();
+                    $uow->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($route)), $route);
                 }
+
             }
         }
 
@@ -104,6 +102,10 @@ class AutoRoutingListener implements EventSubscriber
         return $this->container->get('positibe_orm_routing_auto.auto_route_manager');
     }
 
+    /**
+     * @param $entity
+     * @return bool
+     */
     private function isAutoRouteable($entity)
     {
         try {
@@ -113,6 +115,20 @@ class AutoRoutingListener implements EventSubscriber
         }
     }
 
+    /**
+     * @param $entity
+     * @return bool
+     */
+    private function hasCustomRouteInformation($entity)
+    {
+        return $entity instanceof RouteReferrersInterface &&
+        $entity instanceof CustomRouteInformation &&
+        $entity->getCustomController();
+    }
+
+    /**
+     * @return \Positibe\Bundle\OrmRoutingBundle\AutoRouting\MetadataFactory
+     */
     protected function getMetadataFactory()
     {
         return $this->container->get('positibe_orm_routing_auto.metadata.factory');

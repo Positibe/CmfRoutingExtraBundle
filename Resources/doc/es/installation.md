@@ -144,7 +144,7 @@ Agrega la relación con `Positibe\Bundle\OrmRoutingBundle\Entity\Route`:
 Repositios de entidad
 ---------------------
 
-**Important**: El repositorio para tu entidad debe implementar `Positibe\Bundle\OrmRoutingBundle\Entity\HasRepositoryInterface`. Con esto debe implementar el método findByRoute debido a que la relación de mucho a mucho no se puede obtener sin realizar una consulta dentro del repositorio
+**Important**: El repositorio para tu entidad debe implementar `Positibe\Bundle\OrmRoutingBundle\Entity\HasRepositoryInterface`. Con esto debe implementar el método findOneByRoutes debido a que la relación de mucho a mucho no se puede obtener sin realizar una consulta dentro del repositorio
 
     <?php
     // src/AppBundle/Entity/PostRepository.php
@@ -160,7 +160,7 @@ Repositios de entidad
          * @return mixed
          * @throws \Doctrine\ORM\NonUniqueResultException
          */
-        public function findByRoute($route)
+        public function findOneByRoutes($route)
         {
             $qb = $this->createQueryBuilder('c')
                 ->join('c.routes', 'r')

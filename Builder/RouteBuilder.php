@@ -71,7 +71,7 @@ class RouteBuilder
 
     public function setCustomController(Route $route, CustomRouteInformation $content)
     {
-        if (!empty($content->getCustomController()) && $controller = $this->controllers[$content->getCustomController()]
+        if ($content->getCustomController() && $controller = $this->controllers[$content->getCustomController()]
         ) {
             $route->setDefault('_controller', $controller[0]);
             foreach ($controller[1] as $parameter => $value) {

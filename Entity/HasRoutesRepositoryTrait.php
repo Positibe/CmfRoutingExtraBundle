@@ -23,7 +23,7 @@ trait HasRoutesRepositoryTrait {
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByRoute($route)
+    public function findOneByRoutes($route)
     {
         $qb = $this->createQueryBuilder('c')
             ->join('c.routes', 'r')
