@@ -1,7 +1,7 @@
 PositibeOrmRoutingBundle
 ========================
 
-The PositibeOrmRoutingBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses
+The PositibeOrmRoutingBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses and support auto routing system.
 
 Installation
 ------------
