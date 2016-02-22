@@ -23,7 +23,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
  */
 class ParametersLoader implements LoaderInterface
 {
-
     public function load($autoRouting, $type = null)
     {
         $metadatas = array();

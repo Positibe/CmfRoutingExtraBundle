@@ -5,22 +5,26 @@ parameters:
 services:
     positibe_orm_routing.form.positibe_route_locale_type:
         class: Positibe\Bundle\OrmRoutingBundle\Form\Type\RoutePermalinkType
-        arguments: [@positibe_orm_routing.route_builder, %locale%]
+        arguments: [@positibe_orm_routing.route_factory, %locale%]
         tags:
             - { name: form.type, alias: positibe_route_permalink }
 
     positibe_orm_routing.route.provider:
-        class: Positibe\Bundle\OrmRoutingBundle\Routing\Provider\OrmRouteProvider
+        class: Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\RouteProvider
         arguments: [@doctrine, @cmf_routing.orm_candidates, %positibe_orm_routing.route_entity.class%]
         calls:
             - [ setManagerName, [%cmf_routing.dynamic.persistence.orm.manager_name%] ]
             - [ setRouteCollectionLimit, [%cmf_routing.route_collection_limit%] ]
 
-    positibe_orm_routing.route_builder:
-        class: Positibe\Bundle\OrmRoutingBundle\Builder\RouteBuilder
+    positibe_orm_routing.route_factory:
+        class: Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory
 
     positibe_orm_routing.route_content_enhancer:
         class: Positibe\Bundle\OrmRoutingBundle\Routing\Enhancer\RouteContentEnhancer
         arguments: [@doctrine.orm.entity_manager]
         tags:
             - { name: dynamic_router_route_enhancer, priority: 500 }
+
+    positibe_orm_routing_auto.auto_routing_entity_listener:
+        class: Positibe\Bundle\OrmRoutingBundle\EventListener\AutoRoutingEntityListener
+        arguments: [@service_container]

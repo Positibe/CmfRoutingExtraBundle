@@ -11,9 +11,9 @@
 namespace Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter;
 
 use Doctrine\ORM\EntityManager;
-use Positibe\Bundle\OrmRoutingBundle\Builder\RouteBuilder;
 use Positibe\Bundle\OrmRoutingBundle\Entity\ContentLoader;
 use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
+use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
@@ -31,13 +31,13 @@ class OrmAdapter implements AdapterInterface
 {
     private $em;
     private $router;
-    private $routeBuilder;
+    private $routeFactory;
 
-    public function __construct(EntityManager $entityManager, RouterInterface $router, RouteBuilder $routeBuilder)
+    public function __construct(EntityManager $entityManager, RouterInterface $router, RouteFactory $routeFactory)
     {
         $this->em = $entityManager;
         $this->router = $router;
-        $this->routeBuilder = $routeBuilder;
+        $this->routeFactory = $routeFactory;
     }
 
     /**
@@ -132,7 +132,7 @@ class OrmAdapter implements AdapterInterface
 
     public function createRoute($uri, RouteReferrersInterface $entity, $locale, $controller = null)
     {
-        $route = $this->routeBuilder->createContentRoute(
+        $route = $this->routeFactory->createContentRoute(
             $uri,
             $entity,
             $controller

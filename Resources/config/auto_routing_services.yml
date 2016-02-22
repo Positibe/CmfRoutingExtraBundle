@@ -1,12 +1,7 @@
 services:
-    positibe_orm_routing_auto.auto_routing_listener:
-        class: Positibe\Bundle\OrmRoutingBundle\EventListener\AutoRoutingListener
-        arguments: [@service_container]
-        tags:
-            - { name: doctrine.event_subscriber, priority: 10}
-
     positibe_orm_routing_auto.slugifier:
         class: Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier
+        # @todo quitar la dependencia con Gedmo
         arguments: [Gedmo\Sluggable\Util\Urlizer::urlize]
 
     positibe_orm_routing_auto.auto_route_manager:
@@ -15,7 +10,7 @@ services:
 
     positibe_orm_routing_auto.adapter:
         class: Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter\OrmAdapter
-        arguments: [@doctrine.orm.entity_manager, @router, @positibe_orm_routing.route_builder]
+        arguments: [@doctrine.orm.entity_manager, @router, @positibe_orm_routing.route_factory]
 
     positibe_orm_routing_auto.service_registry:
         class: Symfony\Cmf\Component\RoutingAuto\ServiceRegistry

@@ -23,13 +23,17 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 class ContentLoader
 {
-
+    /**
+     * @param $route
+     * @param $manager
+     * @param bool $throwNotFoundException
+     */
     public static function loadContent($route, $manager, $throwNotFoundException = true)
     {
         if ($route instanceof Route && $route->getContentClass() !== null) {
             try {
                 if ($repository = self::getContentRepositoryByRoute($route, $manager)) {
-                    if ($content = $repository->findByRoute($route)) {
+                    if ($content = $repository->findOneByRoutes($route)) {
                         $route->setContent($content);
                     } else {
                         if ($throwNotFoundException) {

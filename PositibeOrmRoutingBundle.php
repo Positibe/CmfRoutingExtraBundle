@@ -3,6 +3,7 @@
 namespace Positibe\Bundle\OrmRoutingBundle;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+use Positibe\Bundle\OrmRoutingBundle\DependencyInjection\Compiler\OrmRoutingCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -22,6 +23,7 @@ class PositibeOrmRoutingBundle extends Bundle
         ) {
             return;
         }
+        $container->addCompilerPass(new OrmRoutingCompilerPass());
 
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createAnnotationMappingDriver(

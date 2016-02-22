@@ -14,7 +14,6 @@ use Positibe\Component\ContentAware\Entity\ContentClassAwareTrait;
 use Positibe\Component\ContentAware\Model\ContentAwareInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Model\Route as BaseRoute;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  *
@@ -30,6 +29,7 @@ class Route extends BaseRoute implements ContentAwareInterface
     use ContentClassAwareTrait;
 
     public $path;
+
     /**
      * @var integer
      *
@@ -38,13 +38,14 @@ class Route extends BaseRoute implements ContentAwareInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
     /**
      * @var string
      *
-     * @Gedmo\Slug(fields={"staticPrefix"}, updatable=false, separator="_")
      * @ORM\Column(name="name", type="string", length=255, unique=TRUE)
      */
     protected $name;
+
     /**
      * @var string
      *
@@ -52,12 +53,32 @@ class Route extends BaseRoute implements ContentAwareInterface
      */
     protected $position = 0;
 
+    /**
+     * @param string $staticPrefix
+     * @return BaseRoute|void
+     */
+    public function setStaticPrefix($staticPrefix)
+    {
+        if ($this->name === null) {
+            $this->name = str_replace('/', '-', substr($staticPrefix, 1));
+        }
+
+        parent::setStaticPrefix($staticPrefix);
+    }
+
+    /**
+     * @param mixed $content
+     * @return $this|void
+     */
     public function setContent($content)
     {
         parent::setContent($content);
         $this->setContentClassByContent($content);
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getName();

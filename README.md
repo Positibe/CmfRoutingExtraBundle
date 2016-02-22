@@ -1,7 +1,7 @@
 PositibeOrmRoutingBundle
 ========================
 
-The PositibeOrmRoutingBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses and support auto routing system.
+The PositibeOrmRoutingBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses
 
 Installation
 ------------
@@ -45,7 +45,7 @@ Using
 
 An entity that has routes must implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
 
-Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\Entity\Route`:
+Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\Entity\Route` and the needed methods:
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -160,7 +160,7 @@ Entity Repositories
          * @return mixed
          * @throws \Doctrine\ORM\NonUniqueResultException
          */
-        public function findByRoute($route)
+        public function findOneByRoutes($route)
         {
             $qb = $this->createQueryBuilder('c')
                 ->join('c.routes', 'r')

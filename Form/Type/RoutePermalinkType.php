@@ -9,7 +9,7 @@
  */
 namespace Positibe\Bundle\OrmRoutingBundle\Form\Type;
 
-use Positibe\Bundle\OrmRoutingBundle\Builder\RouteBuilder;
+use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
 use Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer\RoutesToRouteLocaleTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,19 +24,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class RoutePermalinkType extends AbstractType
 {
     private $defaultLocale;
-    private $routeBuilder;
+    private $routeFactory;
 
-    public function __construct(RouteBuilder $routeBuilder, $defaultLocale)
+    public function __construct(RouteFactory $routeFactory, $defaultLocale)
     {
         $this->defaultLocale = $defaultLocale;
-        $this->routeBuilder = $routeBuilder;
+        $this->routeFactory = $routeFactory;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $transformer = new RoutesToRouteLocaleTransformer(
             $options['content_has_routes'],
-            $this->routeBuilder,
+            $this->routeFactory,
             $this->defaultLocale,
             $options['current_locale']
         );

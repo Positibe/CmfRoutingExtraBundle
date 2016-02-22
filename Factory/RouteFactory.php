@@ -8,35 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\Builder;
+namespace Positibe\Bundle\OrmRoutingBundle\Factory;
 
 use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
 use Positibe\Bundle\OrmRoutingBundle\Model\CustomRouteInformation;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 
+
 /**
- * Class RouteBuilder
- * @package Positibe\Bundle\OrmRoutingBundle\Builder
- *
- * @deprecated Removed in the next version in favor to "Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory"
+ * Class RouteFactory
+ * @package Positibe\Bundle\OrmRoutingBundle\Factory
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
-class RouteBuilder
+class RouteFactory
 {
     private $controllers = [];
-
-    public static function setCustomRouteInformation(Route $route, CustomRouteInformation $content)
-    {
-        if (!empty($content->getCustomController())) {
-            $route->setDefault('_controller', $content->getCustomController());
-        }
-        if (!empty($content->getCustomTemplate())) {
-            $route->setDefault('_template', $content->getCustomTemplate());
-        }
-
-        return $route;
-    }
 
     public function addController($name, $controller)
     {
@@ -48,6 +35,12 @@ class RouteBuilder
         return $this->controllers;
     }
 
+    /**
+     * @param $path
+     * @param RouteReferrersInterface $content
+     * @param null $controller
+     * @return Route
+     */
     public function createContentRoute($path, RouteReferrersInterface $content, $controller = null)
     {
         $route = new Route();

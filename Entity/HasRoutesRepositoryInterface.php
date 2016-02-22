@@ -18,5 +18,5 @@ namespace Positibe\Bundle\OrmRoutingBundle\Entity;
  */
 interface HasRoutesRepositoryInterface
 {
-    public function findByRoute($route);
+    public function findOneByRoutes($route);
 }

@@ -17,6 +17,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Class LocaleListener
  * @package Positibe\Bundle\OrmRoutingBundle\EventListener
  *
+ * @deprecated Rmoved in the next version
+ *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
 class LocaleListener extends StofLocaleListener

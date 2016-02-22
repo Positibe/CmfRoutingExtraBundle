@@ -5,7 +5,7 @@
     "keywords": ["cmf","routing", "positibe", "positibelabs"],
     "homepage": "http://positibelabs.blogspot.com/bundles/routing",
     "license": "Private",
-    "version": "0.2.6.0",
+    "version": "0.3.0.0",
     "authors": [
         {
             "name": "Pedro Carlos Abreu Jiménez",
@@ -25,14 +25,13 @@
         "positibe/content-aware": "~0.1",
         "doctrine/orm": "~2.4",
         "gedmo/doctrine-extensions": "2.3.*"
-
     },
     "autoload": {
         "psr-4": { "Positibe\\Bundle\\OrmRoutingBundle\\": "" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.3.x-dev"
         }
     }
 }

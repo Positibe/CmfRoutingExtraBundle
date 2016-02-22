@@ -35,7 +35,7 @@ class PositibeOrmRoutingExtension extends Extension
         $container->getDefinition('positibe_orm_routing_auto.metadata.factory.builder')
             ->addArgument(array(array('path' => $autoRouting, 'type' => 'parameters')));
 
-        $routeBuilder = $container->getDefinition('positibe_orm_routing.route_builder');
+        $routeBuilder = $container->getDefinition('positibe_orm_routing.route_factory');
         $availableControllers = array();
         foreach ($config['controllers'] as $name => $controllersConfig) {
             $routeBuilder->addMethodCall('addController', array($name, $controllersConfig['_controller']));

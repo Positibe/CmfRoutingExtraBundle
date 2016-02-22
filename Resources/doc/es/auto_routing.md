@@ -20,6 +20,26 @@ Esto permite crear una ruta con la estructura /{blog}/{title}, donde `blog` ser�
 
 Digamos que tengamos una instancia de la clase con title: `Auto Routing` que está dentro de la categoría: `Symfony`. La ruta resultante sería: `/symfony/auto-routing`
 
+Para poder decirle a doctrine cual es la entidad que desea agregarla con auto-routing debemos agregar el listener a nuestra entidad.
+
+    <?php
+    // src/AppBundle/Entity/Post.php
+    namespace AppBundle\Entity;
+
+    //...
+
+    /**
+     * @ORM\Table(name="app_post")
+     * @ORM\Entity(repositoryClass="AppBundle\Entity\PostRepository")
+     *
+     * ***** Haciendo esto aquí optimizamos el rendimiento de los eventos en Doctrine
+     * @ORM\EntityListeners({"Positibe\Bundle\OrmRoutingBundle\EventListener\AutoRoutingEntityListener"})
+     * *****
+     */
+    class Post implements RouteReferrersInterface {
+        //..
+    }
+
 Controlador por clase
 ---------------------
 
@@ -88,4 +108,4 @@ Para esto puede crear una configuración de los controladores que posee en su si
             default:
                 _controller: [AppBundle:Default:index, {}]
 
-Puede acceder a la lista de controladores mediante el servicio `positibe_orm_routing.route_builder`.
+Puede acceder a la lista de controladores mediante el servicio `positibe_orm_routing.route_factory`.

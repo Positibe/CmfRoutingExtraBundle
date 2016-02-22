@@ -10,9 +10,9 @@
 
 namespace Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer;
 
-use Positibe\Bundle\OrmRoutingBundle\Builder\RouteBuilder;
 use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
-use Positibe\Bundle\OrmRoutingBundle\Model\CustomRouteInformation;
+use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
+use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -28,11 +28,11 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
     private $contentHasRoute;
     private $defaultLocale;
     private $currentLocale;
-    private $routeBuider;
+    private $routeFactory;
 
     public function __construct(
         RouteReferrersInterface $contentHasRoute,
-        RouteBuilder $routeBuilder,
+        RouteFactory $routeFactory,
         $defaultLocale,
         $currentLocale = null
     ) {
@@ -43,7 +43,7 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
             $this->currentLocale = $currentLocale;
         }
         $this->defaultLocale = $defaultLocale;
-        $this->routeBuilder = $routeBuilder;
+        $this->routeFactory = $routeFactory;
     }
 
     /**
@@ -73,10 +73,22 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
         $staticPrefix = $route->getStaticPrefix();
         if (!$route->getId() && !empty($staticPrefix)) {
             $this->contentHasRoute->addRoute($route);
-            $route->setLocale($this->contentHasRoute->getLocale());
+            $route->setLocale($this->getLocale());
         }
 
         return $this->contentHasRoute->getRoutes();
+    }
+
+    /**
+     * @return null
+     */
+    public function getLocale()
+    {
+        if ($this->contentHasRoute instanceof TranslatableInterface && $this->contentHasRoute->getLocale() === null) {
+            return $this->currentLocale;
+        }
+
+        return $this->contentHasRoute->getLocale();
     }
 
 } 
