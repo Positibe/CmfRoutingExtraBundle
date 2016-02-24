@@ -1,6 +1,5 @@
 parameters:
     positibe_orm_routing.route_entity.class: Positibe\Bundle\OrmRoutingBundle\Entity\Route
-    stof_doctrine_extensions.event_listener.locale.class: Positibe\Bundle\OrmRoutingBundle\EventListener\LocaleListener
 
 services:
     positibe_orm_routing.form.positibe_route_locale_type:
