@@ -10,13 +10,7 @@
 
 namespace Positibe\Bundle\OrmRoutingBundle\EventListener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Doctrine\ORM\Mapping\PrePersist;
-use Positibe\Bundle\OrmRoutingBundle\AutoRouting\AutoRouteManager;
 use Positibe\Bundle\OrmRoutingBundle\Model\CustomRouteInformation;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
@@ -47,7 +41,10 @@ class AutoRoutingEntityListener
             $arm->buildUriContextCollection(new UriContextCollection($entity));
         }
 
-        if ($this->hasCustomRouteInformation($entity)) {
+        if ($entity instanceof RouteReferrersInterface &&
+            $entity instanceof CustomRouteInformation &&
+            $entity->getCustomController()
+        ) {
             $routeBuilder = $this->container->get('positibe_orm_routing.route_factory');
             $em = $event->getEntityManager();
             $classMetadata = $em->getClassMetadata('PositibeOrmRoutingBundle:Route');;
@@ -73,16 +70,5 @@ class AutoRoutingEntityListener
         } catch (ClassNotMappedException $e) {
             return false;
         }
-    }
-
-    /**
-     * @param $entity
-     * @return bool
-     */
-    private function hasCustomRouteInformation($entity)
-    {
-        return $entity instanceof RouteReferrersInterface &&
-        $entity instanceof CustomRouteInformation &&
-        $entity->getCustomController();
     }
 } 
