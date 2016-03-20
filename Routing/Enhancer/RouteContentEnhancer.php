@@ -28,16 +28,20 @@ class RouteContentEnhancer implements RouteEnhancerInterface
      */
     protected $em;
 
-    protected $routeField;
+    protected $routeField = '_route_object';
+
+    protected $contentField = '_content';
+
+    protected $localeField = '_locale';
+
+    protected $requestLocale = '_locale';
 
     /**
      * @param EntityManager $entityManager
-     * @param string $routeField
      */
-    public function __construct(EntityManager $entityManager, $routeField = '_route_object')
+    public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
-        $this->routeField = $routeField;
     }
 
     /**
@@ -51,9 +55,11 @@ class RouteContentEnhancer implements RouteEnhancerInterface
      */
     public function enhance(array $defaults, Request $request)
     {
-        $route = $defaults[$this->routeField];
+        ContentLoader::loadContent($defaults[$this->routeField], $this->em);
 
-        ContentLoader::loadContent($route, $this->em);
+        $defaults[$this->contentField] = $defaults[$this->routeField]->getContent();
+
+        $defaults[$this->localeField] = $request->get($this->requestLocale, $defaults[$this->localeField]);
 
         return $defaults;
     }

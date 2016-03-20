@@ -24,27 +24,26 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class ContentLoader
 {
     /**
-     * @param $route
+     * @param Route $route
      * @param $manager
      * @param bool $throwNotFoundException
      */
     public static function loadContent($route, $manager, $throwNotFoundException = true)
     {
-        if ($route instanceof Route && $route->getContentClass() !== null) {
-            try {
-                if ($repository = self::getContentRepositoryByRoute($route, $manager)) {
-                    if ($content = $repository->findOneByRoutes($route)) {
-                        $route->setContent($content);
-                    } else {
-                        if ($throwNotFoundException) {
-                            throw new RouteNotFoundException(
-                                "The route (" . $route->getName() . ") was found but has not a valid content."
-                            );
-                        }
-                    }
+        if ($route instanceof Route &&
+            $route->getContentClass() !== null &&
+            $repository = self::getContentRepositoryByRoute($route, $manager)
+        ) {
+            if ($content = $repository->findOneByRoutes($route)) {
+                $route->setContent($content);
+            } else {
+                if ($throwNotFoundException) {
+                    throw new RouteNotFoundException(
+                        "The route (" . $route->getName() . ") was found but has not a valid content."
+                    );
                 }
-            } catch (MappingException $e) {
             }
+
         }
     }
 
@@ -55,7 +54,11 @@ class ContentLoader
      */
     public static function getContentRepositoryByRoute(Route $route, EntityManager $manager)
     {
-        $repository = $manager->getRepository($route->getContentClass());
+        try {
+            $repository = $manager->getRepository($route->getContentClass());
+        } catch (MappingException $e) {
+            return null;
+        }
 
         return $repository instanceof HasRoutesRepositoryInterface ? $repository : null;
     }
