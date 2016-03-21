@@ -5,7 +5,7 @@
     "keywords": ["cmf","routing", "positibe", "positibelabs"],
     "homepage": "http://positibelabs.blogspot.com/bundles/routing",
     "license": "Private",
-    "version": "0.3.0.0",
+    "version": "0.3.0.1",
     "authors": [
         {
             "name": "Pedro Carlos Abreu Jiménez",
