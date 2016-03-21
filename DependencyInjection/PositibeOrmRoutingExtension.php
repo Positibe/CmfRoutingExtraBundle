@@ -42,5 +42,20 @@ class PositibeOrmRoutingExtension extends Extension
             $availableControllers[] = $name;
         }
         $container->setParameter('positibe_orm_content.available_controllers', $availableControllers);
+
+        $this->addClassesToCompile(array(
+                'Symfony\\Cmf\\Bundle\\RoutingBundle\\Routing\DynamicRouter',
+                'Symfony\\Cmf\\Bundle\\RoutingBundle\\Doctrine\\Orm\\RouteProvider',
+                'Symfony\\Cmf\\Component\\Routing\\NestedMatcher\\NestedMatcher',
+                'Symfony\\Cmf\\Component\\Routing\\ContentAwareGenerator',
+                'Symfony\\Cmf\\Component\\Routing\\NestedMatcher\\UrlMatcher',
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\RouteContentEnhancer',
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldPresenceEnhancer',
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldPresenceEnhancer',
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldMapEnhancer',
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldByClassEnhancer',
+                'Positibe\\Bundle\\OrmRoutingBundle\\Routing\\Enhancer\\RouteContentEnhancer'
+            ));
     }
+
 }

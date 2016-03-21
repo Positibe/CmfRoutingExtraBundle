@@ -24,7 +24,7 @@ trait HasRoutesTrait
     /**
      * @var ArrayCollection|RouteObjectInterface[]
      *
-     * @ORM\ManyToMany(targetEntity="Positibe\Bundle\OrmRoutingBundle\Entity\Route", orphanRemoval=TRUE, cascade="all")
+     * @ORM\ManyToMany(targetEntity="Positibe\Bundle\OrmRoutingBundle\Entity\Route", orphanRemoval=TRUE, cascade="{"persist", "remove"}", fetch="EXTRA_LAZY")
      */
     protected $routes;
 
