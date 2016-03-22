@@ -28,20 +28,18 @@ class ContentLoader
      * @param $manager
      * @param bool $throwNotFoundException
      */
-    public static function loadContent($route, $manager, $throwNotFoundException = true)
+    public static function loadContent($route, $manager, $locale)
     {
         if ($route instanceof Route &&
             $route->getContentClass() !== null &&
-            $repository = self::getContentRepositoryByRoute($route, $manager)
+            $repository = self::getContentRepositoryByRoute($route, $manager, $locale)
         ) {
             if ($content = $repository->findOneByRoutes($route)) {
                 $route->setContent($content);
             } else {
-                if ($throwNotFoundException) {
-                    throw new RouteNotFoundException(
-                        "The route (" . $route->getName() . ") was found but has not a valid content."
-                    );
-                }
+                throw new RouteNotFoundException(
+                    "The route (" . $route->getName() . ") was found but has not a valid content."
+                );
             }
 
         }
@@ -52,12 +50,15 @@ class ContentLoader
      * @param EntityManager $manager
      * @return null|HasRoutesRepositoryInterface
      */
-    public static function getContentRepositoryByRoute(Route $route, EntityManager $manager)
+    public static function getContentRepositoryByRoute(Route $route, EntityManager $manager, $locale)
     {
         try {
             $repository = $manager->getRepository($route->getContentClass());
         } catch (MappingException $e) {
             return null;
+        }
+        if (method_exists($repository, 'setLocale')) {
+            $repository->setLocale($locale);
         }
 
         return $repository instanceof HasRoutesRepositoryInterface ? $repository : null;

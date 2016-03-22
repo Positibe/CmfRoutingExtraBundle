@@ -55,11 +55,11 @@ class RouteContentEnhancer implements RouteEnhancerInterface
      */
     public function enhance(array $defaults, Request $request)
     {
-        ContentLoader::loadContent($defaults[$this->routeField], $this->em);
+        $defaults[$this->localeField] = $request->get($this->requestLocale, $defaults[$this->localeField]);
+
+        ContentLoader::loadContent($defaults[$this->routeField], $this->em, $defaults[$this->localeField]);
 
         $defaults[$this->contentField] = $defaults[$this->routeField]->getContent();
-
-        $defaults[$this->localeField] = $request->get($this->requestLocale, $defaults[$this->localeField]);
 
         return $defaults;
     }
