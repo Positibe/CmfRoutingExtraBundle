@@ -61,10 +61,16 @@ class RouteFactory
     {
         if ($content->getCustomController() && $controller = $this->controllers[$content->getCustomController()]
         ) {
-            $route->setDefault('_controller', $controller[0]);
-            foreach ($controller[1] as $parameter => $value) {
-                $route->setDefault($parameter, $value);
+            $defaults = array('_controller' => $controller[0]);
+            foreach ($route->getRequirements() as $key => $default) {
+                $defaults[$key] = $route->getDefault($key);
             }
+
+            foreach ($controller[1] as $parameter => $value) {
+                $defaults[$parameter] = $value;
+            }
+
+            $route->setDefaults($defaults);
         }
 
         return $route;
