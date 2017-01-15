@@ -13,7 +13,7 @@ use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
 use Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer\RoutesToRouteLocaleTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class RoutePermalinkType
@@ -48,24 +48,24 @@ class RoutePermalinkType extends AbstractType
             array(
                 'label' => 'route.form.permalink',
                 'translation_domain' => 'PositibeOrmRoutingBundle',
-                'required' => false
+                'required' => false,
             )
         );
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
                 'data_class' => 'Positibe\Bundle\OrmRoutingBundle\Entity\Route',
-                'current_locale' => null
+                'current_locale' => null,
             )
         );
         $resolver
             ->setRequired(
                 array(
                     'content_has_routes',
-                    'current_locale'
+                    'current_locale',
                 )
             );
         $resolver
@@ -77,19 +77,8 @@ class RoutePermalinkType extends AbstractType
                 'current_locale',
                 array(
                     'null',
-                    'string'
+                    'string',
                 )
             );
     }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'positibe_route_permalink';
-    }
-
 }
