@@ -3,9 +3,9 @@
     "type": "symfony-bundle",
     "description": "Symfony PositibeOrmRoutingBundle",
     "keywords": ["cmf","routing", "positibe", "positibelabs"],
-    "homepage": "http://positibelabs.blogspot.com/bundles/routing",
+    "homepage": "http://positibelabs.com/bundles/routing",
     "license": "MIT",
-    "version": "1.0.0-beta1",
+    "version": "1.0.0-beta2",
     "authors": [
         {
             "name": "Pedro Carlos Abreu Jiménez",
@@ -24,7 +24,7 @@
         "symfony-cmf/core-bundle": "~1.2",
         "positibe/content-aware": "~0.1",
         "doctrine/orm": "~2.5",
-        "gedmo/doctrine-extensions": "~2.3"
+        "gedmo/doctrine-extensions": "~2.4"
     },
     "autoload": {
         "psr-4": { "Positibe\\Bundle\\OrmRoutingBundle\\": "" }
