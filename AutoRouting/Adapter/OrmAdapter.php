@@ -125,7 +125,7 @@ class OrmAdapter implements AdapterInterface
             )
         );
 
-        ContentLoader::loadContent($route, $this->em, false);
+        ContentLoader::loadContent($route, $this->em);
 
         return $route;
     }
@@ -135,10 +135,9 @@ class OrmAdapter implements AdapterInterface
         $route = $this->routeFactory->createContentRoute(
             $uri,
             $entity,
-            $controller
+            $controller,
+            $locale
         );
-        $route->setLocale($locale);
-        $route->setContent($entity);
         $entity->addRoute($route);
 
         return $route;

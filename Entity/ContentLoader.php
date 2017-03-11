@@ -26,9 +26,9 @@ class ContentLoader
     /**
      * @param Route $route
      * @param $manager
-     * @param bool $throwNotFoundException
+     * @param null $locale
      */
-    public static function loadContent($route, $manager, $locale)
+    public static function loadContent($route, $manager, $locale = null)
     {
         if ($route instanceof Route &&
             $route->getContentClass() !== null &&

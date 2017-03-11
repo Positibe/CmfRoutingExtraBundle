@@ -1,0 +1,1 @@
+Poner las adminsitraciones fuera de las traducciones de los contenidos. Si el sitio está en `en` poder administrarlo en español y hacer las traducciones en base a eso

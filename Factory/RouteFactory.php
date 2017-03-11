@@ -39,9 +39,10 @@ class RouteFactory
      * @param $path
      * @param RouteReferrersInterface $content
      * @param null $controller
+     * @param null $locale
      * @return Route
      */
-    public function createContentRoute($path, RouteReferrersInterface $content, $controller = null)
+    public function createContentRoute($path, RouteReferrersInterface $content, $controller = null, $locale = null)
     {
         $route = new Route();
         $route->path = $path;
@@ -51,6 +52,9 @@ class RouteFactory
         } elseif ($content instanceof CustomRouteInformation) {
             $this->setCustomController($route, $content);
         }
+        if ($locale) {
+            $route->setLocale($locale);
+        }
 
         $route->setContent($content);
 
@@ -59,8 +63,7 @@ class RouteFactory
 
     public function setCustomController(Route $route, CustomRouteInformation $content)
     {
-        if ($content->getCustomController() && $controller = $this->controllers[$content->getCustomController()]
-        ) {
+        if ($content->getCustomController() && $controller = $this->controllers[$content->getCustomController()]) {
             $defaults = array('_controller' => $controller[0]);
             foreach ($route->getRequirements() as $key => $default) {
                 $defaults[$key] = $route->getDefault($key);

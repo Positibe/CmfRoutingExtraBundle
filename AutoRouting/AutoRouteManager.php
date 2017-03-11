@@ -79,12 +79,9 @@ class AutoRouteManager
      */
     private function getLocale($entity)
     {
-        $locale = method_exists(
-            $entity,
-            'getLocale'
-        ) ? $entity->getLocale() : $this->defaultLocale;
+        $locale = method_exists($entity, 'getLocale') ? $entity->getLocale() : $this->defaultLocale;
 
-        return !empty($locale) ? $locale : $this->defaultLocale;
+        return $locale ?: $this->defaultLocale;
     }
 
     /**
@@ -158,7 +155,7 @@ class AutoRouteManager
             $optionsResolver = new OptionsResolver();
             $tokenProvider->configureOptions($optionsResolver);
 
-            $tokens['{' . $name . '}'] = $tokenProvider->provideValue(
+            $tokens['{'.$name.'}'] = $tokenProvider->provideValue(
                 $uriContext,
                 $optionsResolver->resolve($options['options'])
             );
