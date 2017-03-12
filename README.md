@@ -1,7 +1,7 @@
-PositibeOrmRoutingBundle
+PositibeCmfRoutingExtraBundle
 ========================
 
-The PositibeOrmRoutingBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses
+The PositibeCmfRoutingExtraBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses
 
 Installation
 ------------
@@ -20,7 +20,7 @@ Next, be sure to enable the bundles in your application kernel:
             // ...
             new Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle(),
             new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
-            new Positibe\Bundle\OrmRoutingBundle\PositibeOrmRoutingBundle(),
+            new Positibe\Bundle\CmfRoutingExtraBundle\PositibeCmfRoutingExtraBundle(),
 
             // ...
         );
@@ -32,7 +32,7 @@ Configuration
 Import all necessary configurations to your app/config/config.yml the basic configuration.
     # app/config/config.yml
     imports:
-        - { resource: @PositibeOrmRoutingBundle/Resources/config/config.yml }
+        - { resource: @PositibeCmfRoutingExtraBundle/Resources/config/config.yml }
 
 **Caution:**: This bundle use the timestampable, sluggable, translatable and sortable extension of GedmoDoctrineExtension. Be sure that you have the listeners for this extensions enable. You can also to use StofDoctrineExtensionBundle.
 
@@ -45,7 +45,7 @@ Using
 
 An entity that has routes must implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
 
-Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\Entity\Route` and the needed methods:
+Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route` and the needed methods:
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -66,7 +66,7 @@ Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\E
         /**
          * @var ArrayCollection|RouteObjectInterface[]
          *
-         * @ORM\ManyToMany(targetEntity="Positibe\Bundle\OrmRoutingBundle\Entity\Route", orphanRemoval=TRUE, cascade="all")
+         * @ORM\ManyToMany(targetEntity="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route", orphanRemoval=TRUE, cascade="all")
          * @ORM\JoinTable(name="app_post_routes")
          */
         protected $routes;
@@ -116,14 +116,14 @@ Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\E
         }
     }
 
-**Tip:** You can use `Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesTrait` to simplify the implementation of RouteReferrerInterface methods and mapping. This create a many to many relation without doing nothing more.
+**Tip:** You can use `Positibe\Bundle\CmfRoutingExtraBundle\Entity\HasRoutesTrait` to simplify the implementation of RouteReferrerInterface methods and mapping. This create a many to many relation without doing nothing more.
 
     <?php
     // src/AppBundle/Entity/Post.php
     namespace AppBundle\Entity;
 
     use Doctrine\Common\Collections\ArrayCollection;
-    use Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesTrait;
+    use Positibe\Bundle\CmfRoutingExtraBundle\Entity\HasRoutesTrait;
     use Doctrine\ORM\Mapping as ORM;
 
     /**
@@ -141,59 +141,19 @@ Add to any entity you want the relation with `Positibe\Bundle\OrmRoutingBundle\E
         }
     }
 
-Entity Repositories
--------------------
-
-**Important**: The Repository for your entity must implement `Positibe\Bundle\OrmRoutingBundle\Entity\HasRepositoryInterface`.
-
-    <?php
-    // src/AppBundle/Entity/PostRepository.php
-    namespace AppBundle\Entity;
-
-    use Doctrine\ORM\EntityRepository;
-    use Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesRepositoryInterface;
-
-    class PostRepository extends EntityRepository implements HasRoutesRepositoryInterface
-    {
-        /**
-         * @param $route
-         * @return mixed
-         * @throws \Doctrine\ORM\NonUniqueResultException
-         */
-        public function findOneByRoutes($route)
-        {
-            $qb = $this->createQueryBuilder('c')
-                ->join('c.routes', 'r')
-                ->where('r = :route')
-                ->setParameter('route', $route);
-
-            return $qb->getQuery()->getOneOrNullResult();
-        }
-    }
-
-**Tip:** You can use `Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesRepositoryTrait` to simplify the implementation of HasRoutesRepositoryInterface methods.
-
-    <?php
-    // src/AppBundle/Entity/PostRepository.php
-    namespace AppBundle\Entity;
-
-    use Doctrine\ORM\EntityRepository;
-    use Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesRepositoryInterface;
-    use Positibe\Bundle\OrmRoutingBundle\Entity\HasRoutesRepositoryTrait;
-
-    class PostRepository extends EntityRepository implements HasRoutesRepositoryInterface
-    {
-        use HasRoutesRepositoryTrait;
-    }
-
 Creating routes
 ---------------
 
     $post = new Post(); //Class that implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`
     $post->setTitle('You're awesome'); //Fill datas
+    $manager->persist($post);
+    $manager->flush(); //Flush to be able to take the id of the `$post`
 
-    $route = new Route(); //Class of `Positibe\Bundle\OrmRoutingBundle\Entity\Route`
-    $route->setStaticPrefix('you-are-awesome'); //Set the permalink of post instance
+    $contentRepository = $this->container->get('cmf_routing.content_repository');
+    $route = new Route(); //Class of `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`
+    $route->setStaticPrefix('/you-are-awesome'); //Set the permalink of post instance
+    $route->setDefault(RouteObjectInterface::CONTENT_ID, $contentRepository->getContentId($post)); this set ``FQN:id`` into ``content_id``
+    $route->setContent($post);
     $post->addRoute($route);
 
     $em->persist($post);

@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\Model;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\Model;
 
 
 /**
  * Class CustomRouteInformation
- * @package Positibe\Bundle\OrmRoutingBundle\Model
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\Model
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */

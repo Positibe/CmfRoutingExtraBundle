@@ -8,25 +8,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\AutoRouting\Mapping;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping;
 
-use Symfony\Cmf\Component\RoutingAuto\Mapping\ClassMetadata;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 
 /**
  * Class ParametersLoader
- * @package Positibe\Bundle\OrmRoutingBundle\AutoRouting\Mapping
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
 class ParametersLoader implements LoaderInterface
 {
-    public function load($autoRouting, $type = null)
+    public function load($RoutingAuto, $type = null)
     {
         $metadatas = array();
-        foreach ($autoRouting as $className => $mappingNode) {
+        foreach ($RoutingAuto as $className => $mappingNode) {
             $metadatas[] = $this->parseMappingNode($className, $mappingNode);
         }
 

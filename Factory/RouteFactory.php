@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\Factory;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\Factory;
 
-use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
-use Positibe\Bundle\OrmRoutingBundle\Model\CustomRouteInformation;
+use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformation;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 
 
 /**
  * Class RouteFactory
- * @package Positibe\Bundle\OrmRoutingBundle\Factory
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\Factory
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -45,15 +45,16 @@ class RouteFactory
     public function createContentRoute($path, RouteReferrersInterface $content, $controller = null, $locale = null)
     {
         $route = new Route();
-        $route->path = $path;
         $route->setStaticPrefix($path);
+        $route->setName(str_replace('/', '-', substr($path, 1)));
         if ($controller !== null) {
             $route->setDefault('_controller', $controller);
         } elseif ($content instanceof CustomRouteInformation) {
             $this->setCustomController($route, $content);
         }
         if ($locale) {
-            $route->setLocale($locale);
+            $route->addDefaults(array('_locale' => $locale));
+            $route->addRequirements(array('_locale' => $locale));
         }
 
         $route->setContent($content);

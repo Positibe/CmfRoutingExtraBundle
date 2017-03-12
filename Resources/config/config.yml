@@ -7,8 +7,5 @@ cmf_routing:
         enabled: true
         persistence:
             orm: ~
-        route_provider_service_id: positibe_orm_routing.route.provider
-        generic_controller: PositibeOrmRoutingBundle:GenericContent:index
-
-parameters:
-    auto_routing:
+#        route_provider_service_id: positibe_routing.route.provider
+        generic_controller: PositibeCmfRoutingExtraBundle:GenericContent:index

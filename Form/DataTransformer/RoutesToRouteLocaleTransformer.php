@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\Form\DataTransformer;
 
-use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
-use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
+use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
 use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 /**
  * Class RoutesToRouteLocaleTransformer
- * @package Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\Form\DataTransformer
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -54,7 +54,7 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
     {
         /** @var Route $route */
         foreach ($routes as $route) {
-            if ($route->getLocale() === $this->currentLocale) {
+            if ($route->getDefault('_locale') === $this->currentLocale) {
                 return $route;
             }
         }

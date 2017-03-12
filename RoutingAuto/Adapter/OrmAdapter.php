@@ -8,22 +8,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter;
 
 use Doctrine\ORM\EntityManager;
-use Positibe\Bundle\OrmRoutingBundle\Entity\ContentLoader;
-use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
-use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
+use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
+use Symfony\Cmf\Bundle\RoutingBundle\Model\Route;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
-use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
-use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
-use Symfony\Cmf\Component\RoutingAuto\UriContext;
+use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\AdapterInterface;
+use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Model\AutoRouteInterface;
+use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\UriContext;
 use Symfony\Component\Routing\RouterInterface;
 
 
 /**
  * Class OrmAdapter
- * @package Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -56,6 +55,8 @@ class OrmAdapter implements AdapterInterface
      *
      * @param object $object
      * @param string $locale e.g. fr, en, de, be, etc.
+     *
+     * @return object The translated subject object
      */
     public function translateObject($object, $locale)
     {
@@ -95,6 +96,8 @@ class OrmAdapter implements AdapterInterface
      *
      * @param AutoRouteInterface $autoRoute
      * @param $contentObject
+     *
+     * @return bool True when the contents are equal, false otherwise
      */
     public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentObject)
     {
@@ -119,15 +122,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function findRouteForUri($uri)
     {
-        $route = $this->em->getRepository('PositibeOrmRoutingBundle:Route')->findOneBy(
-            array(
-                'staticPrefix' => $uri
-            )
-        );
-
-        ContentLoader::loadContent($route, $this->em);
-
-        return $route;
+        return $this->em->getRepository('CmfRoutingBundle:Route')->findOneBy(['staticPrefix' => $uri]);
     }
 
     public function createRoute($uri, RouteReferrersInterface $entity, $locale, $controller = null)
@@ -148,6 +143,8 @@ class OrmAdapter implements AdapterInterface
      * other routes as required.
      *
      * @param UriContext $uriContext
+     *
+     * @return string
      */
     public function generateAutoRouteTag(UriContext $uriContext)
     {

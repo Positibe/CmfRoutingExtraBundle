@@ -8,22 +8,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\AutoRouting;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto;
 
 use Metadata\MetadataFactoryInterface;
-use Positibe\Bundle\OrmRoutingBundle\AutoRouting\Adapter\OrmAdapter;
-use Positibe\Bundle\OrmRoutingBundle\Entity\Route;
+use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter\OrmAdapter;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
-use Symfony\Cmf\Component\RoutingAuto\ConflictResolverInterface;
-use Symfony\Cmf\Component\RoutingAuto\ServiceRegistry;
-use Symfony\Cmf\Component\RoutingAuto\UriContext;
-use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 /**
  * Class AutoRouteManager
- * @package Positibe\Bundle\OrmRoutingBundle\AutoRouting
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -57,14 +52,13 @@ class AutoRouteManager
     {
         $currentLocale = $this->getLocale($entity);
         if (count($entity->getRoutes())) {
-            /** @var Route $route */
-            foreach ($entity->getRoutes()->toArray() as $route) {
-                $routeLocale = $route->getLocale();
-                if (empty($routeLocale)) {
-                    $route->setLocale($this->defaultLocale);
+            foreach ($entity->getRoutes() as $route) {
+                if ($routeLocale = $route->getDefault('_locale')) {
+                    $route->addDefaults(array('_locale' => $this->defaultLocale));
+                    $route->addRequirements(array('_locale' => $this->defaultLocale));
                     $routeLocale = $this->defaultLocale;
                 }
-                if ($route instanceof Route && $routeLocale === $currentLocale) {
+                if ($routeLocale === $currentLocale) {
                     return false;
                 }
             }
@@ -77,11 +71,13 @@ class AutoRouteManager
      * @param $entity
      * @return mixed
      */
-    private function getLocale($entity)
+    protected function getLocale($entity)
     {
-        $locale = method_exists($entity, 'getLocale') ? $entity->getLocale() : $this->defaultLocale;
+        if (method_exists($entity, 'getLocale')) {
+            return $entity->getLocale() ?: $this->defaultLocale;
+        }
 
-        return $locale ?: $this->defaultLocale;
+        return $this->defaultLocale;
     }
 
     /**

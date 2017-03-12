@@ -7,17 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Positibe\Bundle\OrmRoutingBundle\Form\Type;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\Form\Type;
 
-use Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory;
-use Positibe\Bundle\OrmRoutingBundle\Form\DataTransformer\RoutesToRouteLocaleTransformer;
+use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
+use Positibe\Bundle\CmfRoutingExtraBundle\Form\DataTransformer\RoutesToRouteLocaleTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class RoutePermalinkType
- * @package Positibe\Bundle\OrmRoutingBundle\Form\Type
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\Form\Type
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -47,7 +47,7 @@ class RoutePermalinkType extends AbstractType
             'text',
             array(
                 'label' => 'route.form.permalink',
-                'translation_domain' => 'PositibeOrmRoutingBundle',
+                'translation_domain' => 'PositibeCmfRoutingExtraBundle',
                 'required' => false,
             )
         );
@@ -57,7 +57,7 @@ class RoutePermalinkType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Positibe\Bundle\OrmRoutingBundle\Entity\Route',
+                'data_class' => 'Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route',
                 'current_locale' => null,
             )
         );

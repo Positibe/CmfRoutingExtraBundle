@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Positibe\Bundle\OrmRoutingBundle\Controller;
+namespace Positibe\Bundle\CmfRoutingExtraBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class GenericContentController
- * @package Positibe\Bundle\OrmRoutingBundle\Controller
+ * @package Positibe\Bundle\CmfRoutingExtraBundle\Controller
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
@@ -24,18 +24,18 @@ class GenericContentController extends Controller
 {
     private $defaultTemplate = 'content/index.html.twig';
 
-    public function indexAction(Request $request, $contentDocument, $contentTemplate = null)
+    public function indexAction(Request $request, $contentDocument = null, $template = null)
     {
-        $contentTemplate = $contentTemplate ?: $this->defaultTemplate;
+        $template = $template ?: $this->defaultTemplate;
 
-        $contentTemplate = str_replace(
+        $template = str_replace(
             array('{_format}', '{_locale}'),
             array($request->getRequestFormat(), $request->getLocale()),
-            $contentTemplate
+            $template
         );
 
         $params = array('content' => $contentDocument);
 
-        return $this->render($contentTemplate, $params);
+        return $this->render($template, $params);
     }
 } 

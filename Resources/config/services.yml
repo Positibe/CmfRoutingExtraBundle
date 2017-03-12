@@ -1,29 +1,54 @@
 parameters:
-    positibe_orm_routing.route_entity.class: Positibe\Bundle\OrmRoutingBundle\Entity\Route
+    positibe_routing.route_entity.class: Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route
 
 services:
-    positibe_orm_routing.form.positibe_route_locale_type:
-        class: Positibe\Bundle\OrmRoutingBundle\Form\Type\RoutePermalinkType
-        arguments: [@positibe_orm_routing.route_factory, %locale%]
+    positibe_routing.form.positibe_route_locale_type:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\Form\Type\RoutePermalinkType
+        arguments: ["@positibe_routing.route_factory", %locale%]
         tags:
             - { name: form.type, alias: positibe_route_permalink }
 
-    positibe_orm_routing.route.provider:
-        class: Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\RouteProvider
-        arguments: [@doctrine, @cmf_routing.orm_candidates, %positibe_orm_routing.route_entity.class%]
-        calls:
-            - [ setManagerName, [%cmf_routing.dynamic.persistence.orm.manager_name%] ]
-            - [ setRouteCollectionLimit, [%cmf_routing.route_collection_limit%] ]
+    positibe_routing.route_factory:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory
 
-    positibe_orm_routing.route_factory:
-        class: Positibe\Bundle\OrmRoutingBundle\Factory\RouteFactory
-
-    positibe_orm_routing.route_content_enhancer:
-        class: Positibe\Bundle\OrmRoutingBundle\Routing\Enhancer\RouteContentEnhancer
-        arguments: [@doctrine.orm.entity_manager]
+    positibe_routing_auto.auto_routing_entity_listener:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\EventListener\RoutingAutoEntityListener
+        arguments: ["@service_container"]
         tags:
-            - { name: dynamic_router_route_enhancer, priority: 500 }
+            - { name: doctrine.orm.entity_listener }
 
-    positibe_orm_routing_auto.auto_routing_entity_listener:
-        class: Positibe\Bundle\OrmRoutingBundle\EventListener\AutoRoutingEntityListener
-        arguments: [@service_container]
+    positibe_routing_auto.metadata.parameters.loader:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping\ParametersLoader
+
+    positibe_routing_auto.metadata.factory.builder:
+        class: Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder
+        arguments: ["@positibe_routing_auto.metadata.parameters.loader", %positibe_routing_auto.metadata.loader.resources%]
+
+    positibe_routing_auto.metadata.factory:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping\MetadataFactory
+        factory: ["@positibe_routing_auto.metadata.factory.builder", getMetadataFactory]
+
+    positibe_routing_auto.service_registry:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\ServiceRegistry
+        calls:
+            - [ registerTokenProvider, [ content_method, "@positibe_routing_auto.content_method_provider" ]]
+
+    positibe_routing_auto.auto_route_manager:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\AutoRouteManager
+        arguments: ["@positibe_routing_auto.metadata.factory","@positibe_routing_auto.service_registry","@positibe_routing_auto.adapter", "@positibe_routing_auto.increment_conflict_resolver", %locale% ]
+
+    positibe_routing_auto.slugifier:
+        class: Symfony\Cmf\Api\Slugifier\CallbackSlugifier
+        arguments: [Gedmo\Sluggable\Util\Urlizer::urlize]
+
+    positibe_routing_auto.adapter:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter\OrmAdapter
+        arguments: ["@doctrine.orm.entity_manager", "@router", "@positibe_routing.route_factory"]
+
+    positibe_routing_auto.content_method_provider:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\TokenProvider\ContentMethodProvider
+        arguments: ["@positibe_routing_auto.slugifier"]
+
+    positibe_routing_auto.increment_conflict_resolver:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\ConflictResolver\AutoIncrementConflictResolver
+        arguments: ["@positibe_routing_auto.adapter"]
