@@ -1,16 +1,16 @@
 PositibeCmfRoutingExtraBundle
 =============================
 
-The PositibeCmfRoutingExtraBundle add Doctrine ORM support for Symfony CmfRoutingBundle to store routing on orm databses
+El PositibeCmfRoutingExtraBundle agrega soporte del Doctrine ORM a Symfony CmfRoutingBundle para almacenar las rutas en bases de datos orm.
 
-Installation
-------------
+Instalación
+-----------
 
-To install the bundle just add the dependent bundles:
+Para instalar el bundle solo agrega la dependencia del bundle:
 
-    php composer.phar require positibe/orm-routing-bundle
+    php composer.phar require positibe/cmf-routing-extra-bundle
 
-Next, be sure to enable the bundles in your application kernel:
+Después, asegurate de habilitar los bundles instalados en el kernel de aplicaciones:
 
     <?php
     // app/AppKernel.php
@@ -26,26 +26,26 @@ Next, be sure to enable the bundles in your application kernel:
         );
     }
 
-Configuration
+Configuración
 -------------
 
-Import all necessary configurations to your app/config/config.yml the basic configuration.
+Las configuraciones básicas de los bundles instalados pueden ser importadas en tus configuaciones en app/config/config.yml:
     # app/config/config.yml
     imports:
         - { resource: @PositibeCmfRoutingExtraBundle/Resources/config/config.yml }
 
-**Caution:**: This bundle use the timestampable, sluggable, translatable and sortable extension of GedmoDoctrineExtension. Be sure that you have the listeners for this extensions enable. You can also to use StofDoctrineExtensionBundle.
+**Precaución:**: Este bundle usa las extensiones timestampable, sluggable, translatable and sortable de GedmoDoctrineExtension. Asegúrate de tener los listeners para estas extensiones. Puede usar StofDoctrineExtensionBundle para esto.
 
 Remember to update the schema:
 
     php app/console doctrine:schema:update --force
 
-Using
------
+Usando
+------
 
-An entity that has routes must implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
+Usa entidad que posee rutas debe implementar `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
 
-Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route` and the needed methods:
+Agrega la relación con `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`:
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -116,7 +116,7 @@ Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\D
         }
     }
 
-**Tip:** You can use `Positibe\Bundle\CmfRoutingExtraBundle\Entity\HasRoutesTrait` to simplify the implementation of RouteReferrerInterface methods and mapping. This create a many to many relation without doing nothing more.
+**Pista:** Puedes usar el trait `Positibe\Bundle\CmfRoutingExtraBundle\Entity\HasRoutesTrait` para simplificar la implementación de los métodos RouteReferrerInterface y el mapeo. Esto creará una relación mucho a mucho sin hacer nada más.
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -141,8 +141,8 @@ Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\D
         }
     }
 
-Creating routes
----------------
+Creando rutas
+-------------
 
     $post = new Post(); //Class that implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`
     $post->setTitle('You're awesome'); //Fill datas
@@ -159,9 +159,9 @@ Creating routes
     $em->persist($post);
     $em->flush();
 
-Creating automatic routes
+Creando rutas automáticas
 -------------------------
 
-See on `auto_routing.md`.
+Ver en `auto_routing.md`.
 
-For more information see the [Symfony Cmf Routing Bundle Documentation](http://symfony.com/doc/master/cmf/bundles/routing/index.html)
+Para mayor información ver la documentación oficial de [Symfony Cmf Routing Bundle Documentation](http://symfony.com/doc/master/cmf/bundles/routing/index.html)
