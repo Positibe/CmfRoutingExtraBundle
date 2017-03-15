@@ -4,9 +4,9 @@ parameters:
 services:
     positibe_routing.form.positibe_route_locale_type:
         class: Positibe\Bundle\CmfRoutingExtraBundle\Form\Type\RoutePermalinkType
-        arguments: ["@positibe_routing.route_factory", %locale%]
+        arguments: ["@positibe_routing.route_factory", "%locale%"]
         tags:
-            - { name: form.type, alias: positibe_route_permalink }
+            - { name: form.type }
 
     positibe_routing.route_factory:
         class: Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory
