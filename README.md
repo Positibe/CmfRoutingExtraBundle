@@ -8,7 +8,7 @@ Installation
 
 To install the bundle just add the dependent bundles:
 
-    php composer.phar require positibe/orm-routing-bundle
+    php composer.phar require positibe/cmf-routing-extra-bundle
 
 Next, be sure to enable the bundles in your application kernel:
 
@@ -20,6 +20,7 @@ Next, be sure to enable the bundles in your application kernel:
             // ...
             new Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle(),
             new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+            new Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle(),
             new Positibe\Bundle\CmfRoutingExtraBundle\PositibeCmfRoutingExtraBundle(),
 
             // ...
@@ -158,6 +159,23 @@ Creating routes
 
     $em->persist($post);
     $em->flush();
+
+Content with Custom Routing
+---------------------------
+
+If your content implement `Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInterface`, you can update all your
+routes with the selected controller, without the need of do it on each one.
+
+    [yaml]
+    # app/config/config.yml
+    positibe_cmf_routing_extra:
+        controllers:
+            homepage:
+                _controller: [FrameworkBundle:Template:template, {template: "index.html.twig"}]
+            default:
+                _controller: [AppBundle:Default:index, {}]
+
+You have the access to this config through `positibe_cmf_routing_extra.route_factory`.
 
 Creating automatic routes
 -------------------------

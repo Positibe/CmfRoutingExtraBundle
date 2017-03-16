@@ -13,6 +13,7 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto;
 use Metadata\MetadataFactoryInterface;
 use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter\OrmAdapter;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
+use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
@@ -44,41 +45,7 @@ class AutoRouteManager
         $this->conflictResolver = $conflictResolver;
     }
 
-    /**
-     * @param $entity
-     * @return bool
-     */
-    public function needNewRoute(RouteReferrersInterface $entity)
-    {
-        $currentLocale = $this->getLocale($entity);
-        if (count($entity->getRoutes())) {
-            foreach ($entity->getRoutes() as $route) {
-                if ($routeLocale = $route->getDefault('_locale')) {
-                    $route->addDefaults(array('_locale' => $this->defaultLocale));
-                    $route->addRequirements(array('_locale' => $this->defaultLocale));
-                    $routeLocale = $this->defaultLocale;
-                }
-                if ($routeLocale === $currentLocale) {
-                    return false;
-                }
-            }
-        }
 
-        return true;
-    }
-
-    /**
-     * @param $entity
-     * @return mixed
-     */
-    protected function getLocale($entity)
-    {
-        if (method_exists($entity, 'getLocale')) {
-            return $entity->getLocale() ?: $this->defaultLocale;
-        }
-
-        return $this->defaultLocale;
-    }
 
     /**
      * @param UriContextCollection $uriContextCollection

@@ -9,3 +9,6 @@ cmf_routing:
             orm: ~
 #        route_provider_service_id: positibe_routing.route.provider
         generic_controller: PositibeCmfRoutingExtraBundle:GenericContent:index
+
+cmf_routing_auto:
+    adapter: positibe_doctrine_orm

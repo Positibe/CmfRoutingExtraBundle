@@ -26,6 +26,11 @@ class PositibeCmfRoutingExtraExtension extends Extension
 
         $loader->load('services.yml');
 
+        if (isset($container->getParameter('kernel.bundles')['LuneticsLocaleBundle'])) {
+            $loader->load('translatable_enhancer.yml');
+            $this->addClassesToCompile( ['Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer']);
+        }
+
         $autoRouting = array();
         foreach ($config['auto_routing'] as $key => $autoRoutingConfig) {
             $autoRouting[$key] = $autoRoutingConfig;
@@ -44,9 +49,11 @@ class PositibeCmfRoutingExtraExtension extends Extension
         $container->setParameter('positibe_orm_content.available_controllers', $availableControllers);
 
         $this->addClassesToCompile(
-            array(
+            [
                 'Symfony\\Cmf\\Bundle\\RoutingBundle\\Routing\DynamicRouter',
                 'Symfony\\Cmf\\Bundle\\RoutingBundle\\Doctrine\\Orm\\RouteProvider',
+                'Symfony\\Cmf\\Component\\Routing\\ChainRouter',
+                'Symfony\\Cmf\\Component\\Routing\\DynamicRouter',
                 'Symfony\\Cmf\\Component\\Routing\\NestedMatcher\\NestedMatcher',
                 'Symfony\\Cmf\\Component\\Routing\\ContentAwareGenerator',
                 'Symfony\\Cmf\\Component\\Routing\\NestedMatcher\\UrlMatcher',
@@ -54,7 +61,8 @@ class PositibeCmfRoutingExtraExtension extends Extension
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldPresenceEnhancer',
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldMapEnhancer',
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldByClassEnhancer',
-            )
+                'Symfony\\Cmf\\Component\\Routing\\Enhancer\\ContentRepositoryEnhancer',
+            ]
         );
     }
 

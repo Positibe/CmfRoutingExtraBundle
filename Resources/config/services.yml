@@ -10,6 +10,7 @@ services:
 
     positibe_routing.route_factory:
         class: Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory
+        arguments: ["@cmf_routing.content_repository"]
 
     positibe_routing_auto.auto_routing_entity_listener:
         class: Positibe\Bundle\CmfRoutingExtraBundle\EventListener\RoutingAutoEntityListener
@@ -17,38 +18,8 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener }
 
-    positibe_routing_auto.metadata.parameters.loader:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping\ParametersLoader
-
-    positibe_routing_auto.metadata.factory.builder:
-        class: Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder
-        arguments: ["@positibe_routing_auto.metadata.parameters.loader", %positibe_routing_auto.metadata.loader.resources%]
-
-    positibe_routing_auto.metadata.factory:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Mapping\MetadataFactory
-        factory: ["@positibe_routing_auto.metadata.factory.builder", getMetadataFactory]
-
-    positibe_routing_auto.service_registry:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\ServiceRegistry
-        calls:
-            - [ registerTokenProvider, [ content_method, "@positibe_routing_auto.content_method_provider" ]]
-
-    positibe_routing_auto.auto_route_manager:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\AutoRouteManager
-        arguments: ["@positibe_routing_auto.metadata.factory","@positibe_routing_auto.service_registry","@positibe_routing_auto.adapter", "@positibe_routing_auto.increment_conflict_resolver", %locale% ]
-
-    positibe_routing_auto.slugifier:
-        class: Symfony\Cmf\Api\Slugifier\CallbackSlugifier
-        arguments: [Gedmo\Sluggable\Util\Urlizer::urlize]
-
     positibe_routing_auto.adapter:
         class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter\OrmAdapter
-        arguments: ["@doctrine.orm.entity_manager", "@router", "@positibe_routing.route_factory"]
-
-    positibe_routing_auto.content_method_provider:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\TokenProvider\ContentMethodProvider
-        arguments: ["@positibe_routing_auto.slugifier"]
-
-    positibe_routing_auto.increment_conflict_resolver:
-        class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\ConflictResolver\AutoIncrementConflictResolver
-        arguments: ["@positibe_routing_auto.adapter"]
+        arguments: ["@doctrine.orm.entity_manager", "@positibe_routing.route_factory", "%locale%", "%locales%"]
+        tags:
+            - { name: cmf_routing_auto.adapter, alias: positibe_doctrine_orm }

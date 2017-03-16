@@ -5,10 +5,10 @@ Puedes configurar la creación de las rutas de una forma sencilla similar a Symf
 
 Usando la misma estructura genera de forma automáticas las nutas para tus contenidos.
 
-Solo debes configurar bajo `positibe_routing.auto_routing` usando la estructura habilitada.
+Solo debes configurar bajo `positibe_cmf_routing_extra.auto_routing` usando la estructura habilitada.
 
     # app/config/config.yml
-    positibe_routing:
+    positibe_cmf_routing_extra:
         auto_routing:
             AppBundle\Entity\BlogPost:
                 uri_schema: /{blog}/{title}
@@ -101,11 +101,11 @@ Para esto puede crear una configuración de los controladores que posee en su si
 
     # app/config/config.yml
 
-    positibe_routing:
+    positibe_cmf_routing_extra:
         controllers:
             homepage:
                 _controller: [FrameworkBundle:Template:template, {template: "index.html.twig"}]
             default:
                 _controller: [AppBundle:Default:index, {}]
 
-Puede acceder a la lista de controladores mediante el servicio `positibe_routing.route_factory`.
+Puede acceder a la lista de controladores mediante el servicio `positibe_cmf_routing_extra.route_factory`.

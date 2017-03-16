@@ -12,12 +12,13 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter;
 
 use Doctrine\ORM\EntityManager;
 use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
+use Positibe\Bundle\CmfRoutingExtraBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Model\Route;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
-use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\AdapterInterface;
-use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Model\AutoRouteInterface;
-use Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\UriContext;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
+use Symfony\Cmf\Component\RoutingAuto\UriContext;
 
 
 /**
@@ -28,15 +29,19 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class OrmAdapter implements AdapterInterface
 {
-    private $em;
-    private $router;
-    private $routeFactory;
+    const TAG_NO_MULTILANG = 'no-multilang';
 
-    public function __construct(EntityManager $entityManager, RouterInterface $router, RouteFactory $routeFactory)
+    private $em;
+    private $routeFactory;
+    private $defaultLocale;
+    private $locales;
+
+    public function __construct(EntityManager $entityManager, RouteFactory $routeFactory, $defaultLocale, $locales)
     {
         $this->em = $entityManager;
-        $this->router = $router;
         $this->routeFactory = $routeFactory;
+        $this->defaultLocale = $defaultLocale;
+        $this->locales = $locales;
     }
 
     /**
@@ -47,7 +52,11 @@ class OrmAdapter implements AdapterInterface
      */
     public function getLocales($object)
     {
-        // TODO: Implement getLocales() method.
+        if ($object instanceof TranslatableInterface) {
+            return [$object->getLocale() ?: $this->defaultLocale];
+        }
+
+        return [$this->defaultLocale];
     }
 
     /**
@@ -60,22 +69,37 @@ class OrmAdapter implements AdapterInterface
      */
     public function translateObject($object, $locale)
     {
-        // TODO: Implement translateObject() method.
+//        if (method_exists($object, 'setLocale')) {
+//            $object->setLocale($locale);
+//            $this->em->refresh($object);
+//        }
+
+        return $object;
     }
 
     /**
      * Create a new auto route at the given path
      * with the given document as the content.
      *
-     * @param string $path
-     * @param object $document
+     * @param UriContext $uriContext
+     * @param object|RouteReferrersInterface $entity
      * @param string $tag
      *
      * @return AutoRouteInterface new route document
      */
-    public function createAutoRoute($path, $document, $tag)
+    public function createAutoRoute(UriContext $uriContext, $entity, $tag)
     {
-        // TODO: Implement createAutoRoute() method.
+        $route = $this->routeFactory->createContentRoute(
+            $uriContext->getUri(),
+            $entity,
+            null,
+            $uriContext->getLocale(),
+            $uriContext->getDefaults()
+        );
+
+        $entity->addRoute($route);
+
+        return $route;
     }
 
     /**
@@ -87,7 +111,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function getRealClassName($className)
     {
-        // TODO: Implement getRealClassName() method.
+        return $className;
     }
 
     /**
@@ -101,7 +125,11 @@ class OrmAdapter implements AdapterInterface
      */
     public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentObject)
     {
-        // TODO: Implement compareAutoRouteContent() method.
+        if ($autoRoute->getContent() === $contentObject) {
+            return true;
+        }
+
+        return false;
     }
 
     public function compareRouteContent(Route $route, $contentObject)
@@ -117,25 +145,17 @@ class OrmAdapter implements AdapterInterface
      * Attempt to find a route with the given URL
      *
      * @param string $uri
+     * @param UriContext $uriContext
      *
      * @return null|Route
      */
-    public function findRouteForUri($uri)
+    public function findRouteForUri($uri, UriContext $uriContext)
     {
-        return $this->em->getRepository('CmfRoutingBundle:Route')->findOneBy(['staticPrefix' => $uri]);
-    }
+        if ($route = $this->em->getRepository('CmfRoutingBundle:Route')->findOneBy(['staticPrefix' => $uri])) {
+            return new AutoRoute($route);
+        }
 
-    public function createRoute($uri, RouteReferrersInterface $entity, $locale, $controller = null)
-    {
-        $route = $this->routeFactory->createContentRoute(
-            $uri,
-            $entity,
-            $controller,
-            $locale
-        );
-        $entity->addRoute($route);
-
-        return $route;
+        return null;
     }
 
     /**
@@ -148,7 +168,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function generateAutoRouteTag(UriContext $uriContext)
     {
-        // TODO: Implement generateAutoRouteTag() method.
+        return $uriContext->getLocale() ?: self::TAG_NO_MULTILANG;
     }
 
     /**
@@ -191,13 +211,18 @@ class OrmAdapter implements AdapterInterface
      * Return auto routes which refer to the given content
      * object.
      *
-     * @param object $contentDocument
+     * @param object|RouteReferrersInterface $content
      *
      * @return array
      */
-    public function getReferringAutoRoutes($contentDocument)
+    public function getReferringAutoRoutes($content)
     {
-        // TODO: Implement getReferringAutoRoutes() method.
+        $autoRoute = [];
+        foreach ($content->getRoutes() as $route) {
+            $autoRoute[] = new AutoRoute($route);
+        }
+
+        return $autoRoute;
     }
 
     /**

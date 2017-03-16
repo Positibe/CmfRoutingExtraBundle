@@ -1,0 +1,7 @@
+services:
+    positibe_routing.translatable_enhancer:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\Routing\TranslatableEnhancer
+        arguments: ["@stof_doctrine_extensions.listener.translatable"]
+        public: false
+        tags:
+            - { name: dynamic_router_route_enhancer, priority: 200 }

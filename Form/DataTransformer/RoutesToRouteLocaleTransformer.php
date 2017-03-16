@@ -65,15 +65,16 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param mixed $route
-     * @return mixed|void
+     * @param Route $route
+     * @return Route[]|void
      */
     public function reverseTransform($route)
     {
         $staticPrefix = $route->getStaticPrefix();
         if (!$route->getId() && !empty($staticPrefix)) {
             $this->contentHasRoute->addRoute($route);
-            $route->setLocale($this->getLocale());
+            $route->setDefault('_locale', $this->getLocale());
+            $route->setRequirement('_locale', $this->getLocale());
         }
 
         return $this->contentHasRoute->getRoutes();
