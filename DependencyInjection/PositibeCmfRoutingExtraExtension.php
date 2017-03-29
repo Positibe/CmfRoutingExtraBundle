@@ -28,25 +28,23 @@ class PositibeCmfRoutingExtraExtension extends Extension
 
         if (isset($container->getParameter('kernel.bundles')['LuneticsLocaleBundle'])) {
             $loader->load('translatable_enhancer.yml');
-            $this->addClassesToCompile( ['Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer']);
+            $this->addClassesToCompile(['Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer']);
         }
-
-        $autoRouting = array();
-        foreach ($config['auto_routing'] as $key => $autoRoutingConfig) {
-            $autoRouting[$key] = $autoRoutingConfig;
-        }
-        $container->setParameter(
-            'positibe_routing_auto.metadata.loader.resources',
-            [['path' => $config['auto_routing'], 'type' => 'parameters']]
-        );
 
         $routeBuilder = $container->getDefinition('positibe_routing.route_factory');
-        $availableControllers = array();
+        $availableControllers = [];
         foreach ($config['controllers'] as $name => $controllersConfig) {
             $routeBuilder->addMethodCall('addController', array($name, $controllersConfig['_controller']));
             $availableControllers[] = $name;
         }
-        $container->setParameter('positibe_orm_content.available_controllers', $availableControllers);
+        $container->setParameter('positibe_cms.available_controllers', $availableControllers);
+
+        $availableTemplates = [];
+        foreach ($config['templates'] as $name => $template) {
+            $routeBuilder->addMethodCall('addTemplate', array($name, $template));
+            $availableTemplates[] = $name;
+        }
+        $container->setParameter('positibe_cms.available_templates', $availableTemplates);
 
         $this->addClassesToCompile(
             [
