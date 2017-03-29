@@ -1,11 +1,11 @@
 {
     "name": "positibe/cmf-routing-extra-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony PositibeCmfRoutingExtraBundle",
-    "keywords": ["cmf","routing", "positibe", "positibelabs"],
+    "description": "Symfony Positibe CmfRoutingExtra Bundle",
+    "keywords": ["cmf","routing","routing_auto", "positibe", "positibelabs"],
     "homepage": "http://positibelabs.com/bundles/routing",
     "license": "MIT",
-    "version": "1.0.0-beta4",
+    "version": "1.0.0-RC1",
     "authors": [
         {
             "name": "Pedro Carlos Abreu Jiménez",
@@ -13,8 +13,8 @@
             "homepage": "https://github.com/pcabreus"
         },
         {
-            "name": "PositibeLabs Cooperative",
-            "homepage": "https://github.com/positibelabs"
+            "name": "PositibeLabs",
+            "homepage": "http://www.positibelabs.com"
         }
     ],
     "require": {
