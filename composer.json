@@ -20,9 +20,7 @@
     "require": {
         "symfony/framework-bundle": "~2.8|~3.0",
         "symfony-cmf/routing-bundle": "~2.0",
-        "symfony-cmf/routing-auto": "~2.0",
         "symfony-cmf/routing-auto-bundle": "~2.0",
-        "symfony-cmf/core-bundle": "~2.0",
         "doctrine/orm": "~2.5",
         "gedmo/doctrine-extensions": "~2.4"
     },
