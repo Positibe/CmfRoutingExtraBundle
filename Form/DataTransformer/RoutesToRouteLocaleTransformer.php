@@ -10,7 +10,7 @@
 
 namespace Positibe\Bundle\CmfRoutingExtraBundle\Form\DataTransformer;
 
-use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
+use Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute;
 use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
 use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
@@ -52,29 +52,28 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
      */
     public function transform($routes)
     {
-        /** @var Route $route */
+        /** @var AutoRoute $route */
         foreach ($routes as $route) {
-            if ($route->getDefault('_locale') === $this->currentLocale) {
+            if ($route->getLocale() === $this->currentLocale) {
                 return $route;
             }
         }
 
-        $route = new Route();
+        $route = new AutoRoute();
 
         return $route;
     }
 
     /**
-     * @param Route $route
-     * @return Route[]|void
+     * @param AutoRoute $route
+     * @return AutoRoute[]|void
      */
     public function reverseTransform($route)
     {
         $staticPrefix = $route->getStaticPrefix();
         if (!$route->getId() && !empty($staticPrefix)) {
             $this->contentHasRoute->addRoute($route);
-            $route->setDefault('_locale', $this->getLocale());
-            $route->setRequirement('_locale', $this->getLocale());
+            $route->setLocale($this->getLocale());
         }
 
         return $this->contentHasRoute->getRoutes();

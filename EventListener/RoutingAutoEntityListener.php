@@ -12,7 +12,7 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformation;
+use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformationInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
@@ -36,30 +36,18 @@ class RoutingAutoEntityListener
         $this->container = $container;
     }
 
+    /**
+     * @param RouteReferrersInterface $entity
+     * @param PreUpdateEventArgs $event
+     */
     public function preUpdate(RouteReferrersInterface $entity, PreUpdateEventArgs $event)
     {
-        if ($entity instanceof CustomRouteInformation && isset($event->getEntityChangeSet()['customController'])) {
+
+        if ($entity instanceof CustomRouteInformationInterface &&
+            ($event->hasChangedField('customController') || $event->hasChangedField('customTemplate'))
+        ) {
             $this->updateCustomRouting = true;
         }
-    }
-
-    /**
-     * @param RouteReferrersInterface|CustomRouteInformation $entity
-     * @param LifecycleEventArgs $event
-     */
-    public function postUpdate(RouteReferrersInterface $entity, LifecycleEventArgs $event)
-    {
-        if ($this->updateCustomRouting) {
-            $routeBuilder = $this->container->get('positibe_routing.route_factory');
-            foreach ($entity->getRoutes() as $route) {
-                $routeBuilder->setCustomController($route, $entity);
-                $event->getEntityManager()->persist($route);
-            }
-            $this->updateCustomRouting = false;
-            $this->flush = true;
-        }
-
-        $this->postPersist($entity, $event);
     }
 
     public function postPersist(RouteReferrersInterface $entity, LifecycleEventArgs $event)
@@ -78,13 +66,31 @@ class RoutingAutoEntityListener
     }
 
     /**
+     * @param RouteReferrersInterface|CustomRouteInformationInterface $entity
+     * @param LifecycleEventArgs $event
+     */
+    public function postUpdate(RouteReferrersInterface $entity, LifecycleEventArgs $event)
+    {
+        if ($this->updateCustomRouting) {
+            $routeBuilder = $this->container->get('positibe_routing.route_factory');
+            foreach ($entity->getRoutes() as $route) {
+                $routeBuilder->setCustomController($route, $entity);
+                $routeBuilder->setCustomTemplate($route, $entity);
+                $event->getEntityManager()->persist($route);
+            }
+            $this->updateCustomRouting = false;
+            $this->flush = true;
+        }
+
+        $this->postPersist($entity, $event);
+    }
+
+    /**
      * @param $entity
      * @return bool
      */
-    private
-    function isAutoRouteable(
-        $entity
-    ) {
+    private function isAutoRouteable($entity)
+    {
         try {
             return (boolean)$this->container->get('cmf_routing_auto.metadata.factory')
                 ->getMetadataForClass(get_class($entity));
@@ -98,10 +104,8 @@ class RoutingAutoEntityListener
      * @param $entity
      * @return bool
      */
-    public
-    function needNewRoute(
-        RouteReferrersInterface $entity
-    ) {
+    public function needNewRoute(RouteReferrersInterface $entity)
+    {
         $defaultLocale = $this->container->getParameter('locale');
         $currentLocale = $this->getLocale($entity, $defaultLocale);
         foreach ($entity->getRoutes() as $route) {
@@ -116,16 +120,13 @@ class RoutingAutoEntityListener
         return true;
     }
 
-
     /**
      * @param $entity
+     * @param $defaultLocale
      * @return mixed
      */
-    protected
-    function getLocale(
-        $entity,
-        $defaultLocale
-    ) {
+    protected function getLocale($entity, $defaultLocale)
+    {
         if (method_exists($entity, 'getLocale')) {
             return $entity->getLocale() ?: $defaultLocale;
         }

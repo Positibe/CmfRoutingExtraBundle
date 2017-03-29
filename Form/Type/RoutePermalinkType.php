@@ -56,29 +56,14 @@ class RoutePermalinkType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
-                'data_class' => 'Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route',
+            [
+                'data_class' => 'Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute',
                 'current_locale' => null,
-            )
+            ]
         );
+        $resolver->setRequired(['content_has_routes', 'current_locale',]);
         $resolver
-            ->setRequired(
-                array(
-                    'content_has_routes',
-                    'current_locale',
-                )
-            );
-        $resolver
-            ->addAllowedTypes(
-                'content_has_routes',
-                'Symfony\Cmf\Component\Routing\RouteReferrersInterface'
-            )
-            ->addAllowedTypes(
-                'current_locale',
-                array(
-                    'null',
-                    'string',
-                )
-            );
+            ->addAllowedTypes('content_has_routes', 'Symfony\Cmf\Component\Routing\RouteReferrersInterface')
+            ->addAllowedTypes('current_locale', ['null', 'string',]);
     }
 }

@@ -6,7 +6,8 @@ cmf_routing:
     dynamic:
         enabled: true
         persistence:
-            orm: ~
+            orm:
+                route_class: 'Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute'
 #        route_provider_service_id: positibe_routing.route.provider
         generic_controller: PositibeCmfRoutingExtraBundle:GenericContent:index
 

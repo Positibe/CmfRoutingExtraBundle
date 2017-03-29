@@ -46,7 +46,7 @@ Using
 
 An entity that has routes must implement `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
 
-Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route` and the needed methods:
+Add to any entity you want the relation with `Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute` and the needed methods:
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -67,7 +67,7 @@ Add to any entity you want the relation with `Symfony\Cmf\Bundle\RoutingBundle\D
         /**
          * @var ArrayCollection|RouteObjectInterface[]
          *
-         * @ORM\ManyToMany(targetEntity="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route", orphanRemoval=TRUE, cascade="all")
+         * @ORM\ManyToMany(targetEntity="Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute", orphanRemoval=TRUE, cascade="all")
          * @ORM\JoinTable(name="app_post_routes")
          */
         protected $routes;
@@ -151,7 +151,7 @@ Creating routes
     $manager->flush(); //Flush to be able to take the id of the `$post`
 
     $contentRepository = $this->container->get('cmf_routing.content_repository');
-    $route = new Route(); //Class of `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`
+    $route = new AutoRoute(); //Class of `Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute`
     $route->setStaticPrefix('/you-are-awesome'); //Set the permalink of post instance
     $route->setDefault(RouteObjectInterface::CONTENT_ID, $contentRepository->getContentId($post)); this set ``FQN:id`` into ``content_id``
     $route->setContent($post);

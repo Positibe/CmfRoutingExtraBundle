@@ -89,7 +89,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function createAutoRoute(UriContext $uriContext, $entity, $tag)
     {
-        $route = $this->routeFactory->createContentRoute(
+        $route = $this->routeFactory->createContentAutoRoute(
             $uriContext->getUri(),
             $entity,
             null,
@@ -151,8 +151,8 @@ class OrmAdapter implements AdapterInterface
      */
     public function findRouteForUri($uri, UriContext $uriContext)
     {
-        if ($route = $this->em->getRepository('CmfRoutingBundle:Route')->findOneBy(['staticPrefix' => $uri])) {
-            return new AutoRoute($route);
+        if ($route = $this->em->getRepository('PositibeCmfRoutingExtraBundle:AutoRoute')->findOneBy(['staticPrefix' => $uri])) {
+            return $route;
         }
 
         return null;
@@ -217,12 +217,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function getReferringAutoRoutes($content)
     {
-        $autoRoute = [];
-        foreach ($content->getRoutes() as $route) {
-            $autoRoute[] = new AutoRoute($route);
-        }
-
-        return $autoRoute;
+        return $content->getRoutes();
     }
 
     /**

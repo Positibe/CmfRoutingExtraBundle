@@ -1,5 +1,5 @@
 parameters:
-    positibe_routing.route_entity.class: Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route
+    positibe_routing.route_entity.class: Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute
 
 services:
     positibe_routing.form.positibe_route_locale_type:

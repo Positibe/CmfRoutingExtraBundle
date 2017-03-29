@@ -45,7 +45,7 @@ Usando
 
 Usa entidad que posee rutas debe implementar `Symfony\Cmf\Component\Routing\RouteReferrersInterface`.
 
-Agrega la relación con `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`:
+Agrega la relación con `Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute`:
 
     <?php
     // src/AppBundle/Entity/Post.php
@@ -66,7 +66,7 @@ Agrega la relación con `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`:
         /**
          * @var ArrayCollection|RouteObjectInterface[]
          *
-         * @ORM\ManyToMany(targetEntity="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route", orphanRemoval=TRUE, cascade="all")
+         * @ORM\ManyToMany(targetEntity="Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute", orphanRemoval=TRUE, cascade="all")
          * @ORM\JoinTable(name="app_post_routes")
          */
         protected $routes;
@@ -150,7 +150,7 @@ Creando rutas
     $manager->flush(); //Flush to be able to take the id of the `$post`
 
     $contentRepository = $this->container->get('cmf_routing.content_repository');
-    $route = new Route(); //Class of `Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route`
+    $route = new AutoRoute(); //Class of `Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute`
     $route->setStaticPrefix('/you-are-awesome'); //Set the permalink of post instance
     $route->setDefault(RouteObjectInterface::CONTENT_ID, $contentRepository->getContentId($post)); this set ``FQN:id`` into ``content_id``
     $route->setContent($post);
