@@ -42,7 +42,6 @@ class RoutingAutoEntityListener
      */
     public function preUpdate(RouteReferrersInterface $entity, PreUpdateEventArgs $event)
     {
-
         if ($entity instanceof CustomRouteInformationInterface &&
             ($event->hasChangedField('customController') || $event->hasChangedField('customTemplate'))
         ) {

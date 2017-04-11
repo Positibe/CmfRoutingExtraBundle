@@ -72,8 +72,13 @@ class RoutesToRouteLocaleTransformer implements DataTransformerInterface
     {
         $staticPrefix = $route->getStaticPrefix();
         if (!$route->getId() && !empty($staticPrefix)) {
+            $route = $this->routeFactory->createContentAutoRoute(
+                $staticPrefix,
+                $this->contentHasRoute,
+                null,
+                $this->getLocale()
+            );
             $this->contentHasRoute->addRoute($route);
-            $route->setLocale($this->getLocale());
         }
 
         return $this->contentHasRoute->getRoutes();
