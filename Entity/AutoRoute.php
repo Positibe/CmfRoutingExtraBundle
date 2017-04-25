@@ -90,7 +90,6 @@ class AutoRoute extends CmfRoute implements AutoRouteInterface
      */
     public function setRedirectTarget($autoTarget)
     {
-        // TODO: Implement setRedirectTarget() method.
     }
 
     /**
@@ -101,7 +100,6 @@ class AutoRoute extends CmfRoute implements AutoRouteInterface
      */
     public function getRedirectTarget()
     {
-        // TODO: Implement getRedirectTarget() method.
     }
 
     /**

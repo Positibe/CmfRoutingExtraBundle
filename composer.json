@@ -5,7 +5,7 @@
     "keywords": ["cmf","routing","routing_auto", "positibe", "positibelabs"],
     "homepage": "http://positibelabs.com/bundles/routing",
     "license": "MIT",
-    "version": "1.0.0-RC2",
+    "version": "1.0.0-RC3",
     "authors": [
         {
             "name": "Pedro Carlos Abreu Jiménez",

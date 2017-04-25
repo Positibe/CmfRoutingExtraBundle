@@ -12,6 +12,7 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute;
 use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformationInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
@@ -72,6 +73,7 @@ class RoutingAutoEntityListener
     {
         if ($this->updateCustomRouting) {
             $routeBuilder = $this->container->get('positibe_routing.route_factory');
+            /** @var AutoRoute $route */
             foreach ($entity->getRoutes() as $route) {
                 $routeBuilder->setCustomController($route, $entity);
                 $routeBuilder->setCustomTemplate($route, $entity);

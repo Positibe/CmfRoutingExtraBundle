@@ -12,7 +12,7 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter;
 
 use Doctrine\ORM\EntityManager;
 use Positibe\Bundle\CmfRoutingExtraBundle\Factory\RouteFactory;
-use Positibe\Bundle\CmfRoutingExtraBundle\Model\AutoRoute;
+use Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute;
 use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Model\Route;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
@@ -194,7 +194,6 @@ class OrmAdapter implements AdapterInterface
      */
     public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute)
     {
-        // TODO: Implement migrateAutoRouteChildren() method.
     }
 
     /**
@@ -204,7 +203,6 @@ class OrmAdapter implements AdapterInterface
      */
     public function removeAutoRoute(AutoRouteInterface $autoRoute)
     {
-        // TODO: Implement removeAutoRoute() method.
     }
 
     /**
@@ -235,7 +233,6 @@ class OrmAdapter implements AdapterInterface
      */
     public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
-        // TODO: Implement createRedirectRoute() method.
     }
 
 } 
