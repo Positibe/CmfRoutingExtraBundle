@@ -60,6 +60,7 @@ class PositibeCmfRoutingExtraExtension extends Extension
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldMapEnhancer',
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldByClassEnhancer',
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\ContentRepositoryEnhancer',
+                'Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer',
             ]
         );
     }
