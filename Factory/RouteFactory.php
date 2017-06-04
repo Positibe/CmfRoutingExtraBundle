@@ -59,6 +59,7 @@ class RouteFactory
         } elseif ($content instanceof CustomRouteInformationInterface) {
             $this->setCustomController($route, $content);
             $this->setCustomTemplate($route, $content);
+            $route->setHost($content->getHost());
         }
         if ($locale) {
             $route->setLocale($locale);
@@ -128,6 +129,20 @@ class RouteFactory
                 }
             }
         }
+
+        return $route;
+    }
+
+    /**
+     * @param RouteReferrersInterface|CustomRouteInformationInterface $entity
+     * @param AutoRoute $route
+     * @return AutoRoute
+     */
+    public function updateRoutes(RouteReferrersInterface $entity, AutoRoute $route)
+    {
+        $this->setCustomController($route, $entity);
+        $this->setCustomTemplate($route, $entity);
+        $route->setHost($entity->getHost());
 
         return $route;
     }

@@ -14,6 +14,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute;
 use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformationInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
@@ -44,7 +45,11 @@ class RoutingAutoEntityListener
     public function preUpdate(RouteReferrersInterface $entity, PreUpdateEventArgs $event)
     {
         if ($entity instanceof CustomRouteInformationInterface &&
-            ($event->hasChangedField('customController') || $event->hasChangedField('customTemplate'))
+            (
+                $event->hasChangedField('customController') ||
+                $event->hasChangedField('customTemplate') ||
+                $event->hasChangedField('host')
+            )
         ) {
             $this->updateCustomRouting = true;
         }
@@ -53,15 +58,33 @@ class RoutingAutoEntityListener
     public function postPersist(RouteReferrersInterface $entity, LifecycleEventArgs $event)
     {
         $arm = $this->container->get('cmf_routing_auto.auto_route_manager');
+        $routeBuilder = $this->container->get('positibe_routing.route_factory');
+        $contentRepository = $this->container->get('cmf_routing.content_repository');
+
+        foreach ($entity->getRoutes() as $route) {
+            if (!$route->getDefault(RouteObjectInterface::CONTENT_ID)) {
+                $route->setDefault(RouteObjectInterface::CONTENT_ID, $contentRepository->getContentId($entity));
+                $route->setRequirement(RouteObjectInterface::CONTENT_ID, $contentRepository->getContentId($entity));
+                $this->flush = true;
+            }
+
+            if ($this->updateCustomRouting) {
+                $routeBuilder->updateRoutes($entity, $route);
+                $event->getEntityManager()->persist($route);
+            }
+        }
 
         if ($this->isAutoRouteable($entity) && $this->needNewRoute($entity)) {
             $arm->buildUriContextCollection(new UriContextCollection($entity));
             $this->flush = true;
         }
 
-        if ($this->flush) {
+
+
+        if ($this->flush || $this->updateCustomRouting) {
             $event->getEntityManager()->flush();
             $this->flush = false;
+            $this->updateCustomRouting = false;
         }
     }
 
@@ -71,18 +94,6 @@ class RoutingAutoEntityListener
      */
     public function postUpdate(RouteReferrersInterface $entity, LifecycleEventArgs $event)
     {
-        if ($this->updateCustomRouting) {
-            $routeBuilder = $this->container->get('positibe_routing.route_factory');
-            /** @var AutoRoute $route */
-            foreach ($entity->getRoutes() as $route) {
-                $routeBuilder->setCustomController($route, $entity);
-                $routeBuilder->setCustomTemplate($route, $entity);
-                $event->getEntityManager()->persist($route);
-            }
-            $this->updateCustomRouting = false;
-            $this->flush = true;
-        }
-
         $this->postPersist($entity, $event);
     }
 

@@ -28,4 +28,9 @@ interface CustomRouteInformationInterface
      * @return string|null
      */
     public function getCustomTemplate();
+
+    /**
+     * @return string|null
+     */
+    public function getHost();
 }
