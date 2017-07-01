@@ -115,6 +115,19 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
+     * Compares the locale the route is matching and the given locale.
+     *
+     * @param AutoRouteInterface $autoRoute
+     * @param string|null $locale
+     *
+     * @return bool True when the locales are equal, false otherwize
+     */
+    public function compareAutoRouteLocale(AutoRouteInterface $autoRoute, $locale)
+    {
+        return $autoRoute->getLocale() === $locale;
+    }
+
+    /**
      * Return true if the content associated with the auto route
      * and the given content object are the same.
      *
@@ -151,7 +164,10 @@ class OrmAdapter implements AdapterInterface
      */
     public function findRouteForUri($uri, UriContext $uriContext)
     {
-        if ($route = $this->em->getRepository('PositibeCmfRoutingExtraBundle:AutoRoute')->findOneBy(['staticPrefix' => $uri])) {
+        if ($route = $this->em->getRepository('PositibeCmfRoutingExtraBundle:AutoRoute')->findOneBy(
+            ['staticPrefix' => $uri]
+        )
+        ) {
             return $route;
         }
 
