@@ -1,10 +1,11 @@
 cmf_routing:
     chain:
         routers_by_id:
-            router.default: 200
-            cmf_routing.dynamic_router: 100
+            cmf_routing.dynamic_router: 200
+            router.default: 100
     dynamic:
         enabled: true
+        uri_filter_regexp: "#^(?!(/css/|/js/|/admin|/security/|/frontend/|/backend/)).*$#"
         persistence:
             orm:
                 route_class: 'Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute'

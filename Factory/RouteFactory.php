@@ -10,6 +10,7 @@
 
 namespace Positibe\Bundle\CmfRoutingExtraBundle\Factory;
 
+use Gedmo\Sluggable\Util\Urlizer;
 use Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute;
 use Positibe\Bundle\CmfRoutingExtraBundle\Model\CustomRouteInformationInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\ContentRepository;
@@ -53,7 +54,11 @@ class RouteFactory
     ) {
         $route = new AutoRoute();
         $route->setStaticPrefix($path);
-        $route->setName(str_replace('/', '-', substr($path, 1)));
+        $route->setName(
+            method_exists($content, '__toString') ?
+                Urlizer::urlize($content->__toString()) :
+                str_replace('/', '-', substr($path, 1))
+        );
         if ($controller !== null) {
             $route->setDefault('_controller', $controller);
         } elseif ($content instanceof CustomRouteInformationInterface) {
