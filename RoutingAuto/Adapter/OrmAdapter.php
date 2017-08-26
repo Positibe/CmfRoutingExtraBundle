@@ -82,22 +82,21 @@ class OrmAdapter implements AdapterInterface
      * with the given document as the content.
      *
      * @param UriContext $uriContext
-     * @param object|RouteReferrersInterface $entity
      * @param string $tag
      *
      * @return AutoRouteInterface new route document
      */
-    public function createAutoRoute(UriContext $uriContext, $entity, $tag)
+    public function createAutoRoute(UriContext $uriContext, $tag)
     {
         $route = $this->routeFactory->createContentAutoRoute(
             $uriContext->getUri(),
-            $entity,
+            $uriContext->getSubject(),
             null,
             $uriContext->getLocale(),
             $uriContext->getDefaults()
         );
 
-        $entity->addRoute($route);
+        $uriContext->getSubject()->addRoute($route);
 
         return $route;
     }

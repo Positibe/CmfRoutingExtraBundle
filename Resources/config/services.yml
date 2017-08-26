@@ -21,5 +21,11 @@ services:
     positibe_routing_auto.adapter:
         class: Positibe\Bundle\CmfRoutingExtraBundle\RoutingAuto\Adapter\OrmAdapter
         arguments: ["@doctrine.orm.entity_manager", "@positibe_routing.route_factory", "%locale%", "%locales%"]
+        public: false
         tags:
             - { name: cmf_routing_auto.adapter, alias: positibe_doctrine_orm }
+
+    positibe_routing.content_aware_generator:
+        class: Positibe\Bundle\CmfRoutingExtraBundle\Routing\ContentAwareGenerator
+        public: false
+        arguments: ["@cmf_routing.route_provider", "@?logger"]

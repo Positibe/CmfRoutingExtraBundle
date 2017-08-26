@@ -12,6 +12,7 @@ namespace Positibe\Bundle\CmfRoutingExtraBundle\Entity;
 
 use Symfony\Cmf\Bundle\RoutingBundle\Model\Route as CmfRoute;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,6 +40,7 @@ class AutoRoute extends CmfRoute implements AutoRouteInterface
     /**
      * @var string
      *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(name="name", type="string", length=255, unique=TRUE)
      */
     protected $name;

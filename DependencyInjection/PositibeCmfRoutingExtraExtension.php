@@ -2,6 +2,7 @@
 
 namespace Positibe\Bundle\CmfRoutingExtraBundle\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -46,6 +47,14 @@ class PositibeCmfRoutingExtraExtension extends Extension
         }
         $container->setParameter('positibe_cms.available_templates', $availableTemplates);
 
+        if ($nameFilterRegex = $config['name_filter_regex']) {
+            $container->getDefinition('positibe_routing.content_aware_generator')->addMethodCall(
+                'setNameFilterRegex',
+                [$nameFilterRegex]
+            );
+            $container->setAlias('cmf_routing.generator', new Alias('positibe_routing.content_aware_generator', false));
+        }
+
         $this->addClassesToCompile(
             [
                 'Symfony\\Cmf\\Bundle\\RoutingBundle\\Routing\DynamicRouter',
@@ -61,6 +70,7 @@ class PositibeCmfRoutingExtraExtension extends Extension
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\FieldByClassEnhancer',
                 'Symfony\\Cmf\\Component\\Routing\\Enhancer\\ContentRepositoryEnhancer',
                 'Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer',
+                'Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\ContentAwareGenerator',
             ]
         );
     }

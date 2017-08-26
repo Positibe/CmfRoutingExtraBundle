@@ -53,11 +53,15 @@ class RouteFactory
         $defaults = []
     ) {
         $route = new AutoRoute();
-        $route->setStaticPrefix($path);
+        $route->setStaticPrefix(substr($path, 0, 225));
         $route->setName(
-            method_exists($content, '__toString') ?
-                Urlizer::urlize($content->__toString()) :
-                str_replace('/', '-', substr($path, 1))
+            substr(
+                method_exists($content, '__toString') ?
+                    Urlizer::urlize($content->__toString()) :
+                    str_replace('/', '-', substr($path, 1)),
+                0,
+                225
+            )
         );
         if ($controller !== null) {
             $route->setDefault('_controller', $controller);

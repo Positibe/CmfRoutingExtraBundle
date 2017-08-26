@@ -26,18 +26,19 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('name_filter_regex')->defaultValue(null)->end()
                 ->arrayNode('templates')
                     ->useAttributeAsKey('class')
-                    ->prototype('scalar')                    ->end()
+                    ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('controllers')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                     ->children()
                         ->arrayNode('_controller')
-                        ->prototype('variable')
+                        ->prototype('variable')->end()
                     ->end()
-                ->end()
+
             ->end();
         return $treeBuilder;
     }
