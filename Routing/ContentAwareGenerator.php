@@ -11,6 +11,7 @@
 namespace Positibe\Bundle\CmfRoutingExtraBundle\Routing;
 
 use Symfony\Cmf\Component\Routing\ContentAwareGenerator as CmfContentAwareGerenator;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 /**
@@ -54,7 +55,7 @@ class ContentAwareGenerator extends CmfContentAwareGerenator
             }
         }
 
-        return !$name || $name instanceof RouteReferrersReadInterface;
+        return !$name || $name instanceof RouteObjectInterface || $name instanceof RouteReferrersReadInterface;
 
     }
 
