@@ -10,7 +10,7 @@
 
 namespace Positibe\Bundle\CmfRoutingExtraBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Pedro Carlos Abreu <pcabreus@gmail.com>
  */
-class GenericContentController extends Controller
+class GenericContentController extends AbstractController
 {
     private $defaultTemplate = 'content/index.html.twig';
 
