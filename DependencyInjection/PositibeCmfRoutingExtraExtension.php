@@ -29,7 +29,7 @@ class PositibeCmfRoutingExtraExtension extends Extension
 
         if (isset($container->getParameter('kernel.bundles')['LuneticsLocaleBundle'])) {
             $loader->load('translatable_enhancer.yml');
-            $this->addClassesToCompile(['Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer']);
+            $this->addAnnotatedClassesToCompile(['Positibe\\Bundle\\CmfRoutingExtraBundle\\Routing\\TranslatableEnhancer']);
         }
 
         $routeBuilder = $container->getDefinition('positibe_routing.route_factory');
@@ -55,7 +55,7 @@ class PositibeCmfRoutingExtraExtension extends Extension
             $container->setAlias('cmf_routing.generator', new Alias('positibe_routing.content_aware_generator', false));
         }
 
-        $this->addClassesToCompile(
+        $this->addAnnotatedClassesToCompile(
             [
                 'Symfony\\Cmf\\Bundle\\RoutingBundle\\Routing\DynamicRouter',
                 'Symfony\\Cmf\\Bundle\\RoutingBundle\\Doctrine\\Orm\\RouteProvider',

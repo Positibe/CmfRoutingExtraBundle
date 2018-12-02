@@ -1,5 +1,6 @@
 parameters:
     positibe_routing.route_entity.class: Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute
+    locales: []
 
 services:
     positibe_routing.form.positibe_route_locale_type:

@@ -36,7 +36,7 @@ class OrmAdapter implements AdapterInterface
     private $defaultLocale;
     private $locales;
 
-    public function __construct(EntityManager $entityManager, RouteFactory $routeFactory, $defaultLocale, $locales)
+    public function __construct(EntityManager $entityManager, RouteFactory $routeFactory, $defaultLocale, $locales = [])
     {
         $this->em = $entityManager;
         $this->routeFactory = $routeFactory;

@@ -18,7 +18,6 @@ Next, be sure to enable the bundles in your application kernel:
     {
         return array(
             // ...
-            new Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle(),
             new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
             new Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle(),
             new Positibe\Bundle\CmfRoutingExtraBundle\PositibeCmfRoutingExtraBundle(),
@@ -30,10 +29,31 @@ Next, be sure to enable the bundles in your application kernel:
 Configuration
 -------------
 
-Import all necessary configurations to your app/config/config.yml the basic configuration.
-    # app/config/config.yml
-    imports:
-        - { resource: @PositibeCmfRoutingExtraBundle/Resources/config/config.yml }
+Copy the configuration in your configurations packages:
+
+    # config/packages/positibe_routing
+    parameters:
+    #    locales: [es, en, fr] # Maybe you already have it configured
+        
+    cmf_routing:
+        chain:
+            routers_by_id:
+                cmf_routing.dynamic_router: 200
+                router.default: 100
+        dynamic:
+            enabled: true
+            uri_filter_regexp: "#^(?!(/css/|/js/|/admin/|/security/|/frontend/|/backend/|/public/)).*$#"
+            persistence:
+                orm:
+                    route_class: 'Positibe\Bundle\CmfRoutingExtraBundle\Entity\AutoRoute'
+    #        route_provider_service_id: positibe_routing.route.provider
+            generic_controller: PositibeCmfRoutingExtraBundle:GenericContent:index
+    
+    cmf_routing_auto:
+        adapter: positibe_doctrine_orm
+    
+    
+
 
 **Caution:**: This bundle use the timestampable, sluggable, translatable and sortable extension of GedmoDoctrineExtension. Be sure that you have the listeners for this extensions enable. You can also to use StofDoctrineExtensionBundle.
 
